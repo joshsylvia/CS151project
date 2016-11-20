@@ -1,5 +1,5 @@
 
-public class Canvas {
+public class Canvas extends JPanel {
 
 	
 
