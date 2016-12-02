@@ -1,6 +1,4 @@
 import java.awt.*;
-import java.util.*;
-
 
 
 public class DRect extends DShape {
@@ -11,6 +9,8 @@ public class DRect extends DShape {
     }
     
     public void draw(Graphics g) {
-    	
+        g.setColor(model.getColor());
+        g.fillRect(model.getX(), model.getY(), model.getWidth(), model.getHeight());
+        DRectModel.showKnob(g);
     }
 }

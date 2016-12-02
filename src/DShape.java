@@ -4,15 +4,15 @@ public class DShape implements Serializable {
     public DShapeModel model;
    
 
-    public DShape(DShapeModel model) {
-        this.model = model;
+    public DShape(DShapeModel smodel) {
+        model = smodel;
     }
 
-    public void setModel(DShapeModel model) {
-        this.model = model;
+    public void setModel(DShapeModel smodel) {
+        model = smodel;
     }
 
     public DShapeModel getModel() {
-        return this.model;
+        return model;
     }
 }
