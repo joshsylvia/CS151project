@@ -12,6 +12,11 @@ public class DLine extends DShape {
 	}
 
 	public void draw(Graphics g) {
-    	
+	//	Point[] corners = getKnobs();
+		g.drawLine(model.getX(), model.getY(), model.getWidth(), model.getHeight());
+       g.setColor(Color.black);
+    //    for(Point corner: corners) {
+      //      g.fillRect(corner.x, corner.y, 9, 9);
+  //      }
     }
 }
