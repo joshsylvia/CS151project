@@ -23,8 +23,8 @@ public class DShapeModel implements Serializable {
     public DShapeModel() {
         knobSize = 6;
         knobs = new Rectangle[4];
-        x = (int) (Math.random() * 750);
-        y = (int) (Math.random() * 550);
+        x = (int) (Math.random() * 350);
+        y = (int) (Math.random() * 350);
         width = 50;
         height = 50;
         color = Color.GRAY;
