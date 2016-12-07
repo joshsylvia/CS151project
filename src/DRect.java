@@ -12,5 +12,6 @@ public class DRect extends DShape {
         g.setColor(model.getColor());
         g.fillRect(model.getX(), model.getY(), model.getWidth(), model.getHeight());
         DRectModel.showKnob(g);
+        
     }
 }

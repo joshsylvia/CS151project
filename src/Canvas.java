@@ -27,7 +27,8 @@ import javax.swing.JTextField;
 public class Canvas extends JPanel {
 
 	JButton RectButton, OvalButton , LineButton , TextButton, setColor ;
-	JTextField text = new JTextField("Add ");
+	JLabel text = new JLabel("Add ");
+	
 	private JComboBox fontComboBox  ;
 	JLabel fontTesterLabel = new JLabel("this is a test");
 	Font selectedFont ;
@@ -43,6 +44,8 @@ public class Canvas extends JPanel {
 	JPanel p = new JPanel() ;
 	public Canvas (){
 
+		setSize(new Dimension(400,400));
+		//setBackground(Color.BLUE);
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		addShapeButtons();
 		add(setColor);
