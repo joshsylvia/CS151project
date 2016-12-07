@@ -22,15 +22,22 @@ import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField; 
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel; 
 
 public class Canvas extends JPanel {
 
+	String column_names[]= {"X","Y","Width","Height"};
+	DefaultTableModel table_model = new DefaultTableModel(column_names ,0);
+	JTable table = new JTable(table_model);
+	
 	JButton RectButton, OvalButton , LineButton , TextButton, setColor ;
 	JLabel text = new JLabel("Add ");
 	
 	private JComboBox fontComboBox  ;
-	JLabel fontTesterLabel = new JLabel("this is a test");
+	JLabel fontTesterLabel = new JLabel("This is a sample");
 	Font selectedFont ;
 	Color selectedBackground;
 	JPanel tablePanel = new JPanel();
@@ -52,53 +59,46 @@ public class Canvas extends JPanel {
 		setUpFontChooser();
 		setUpMoveButtons();
 		setUpTable();
+		//this is a test.
+		addRowToTable(10 , 10 , 111, 58 );
+		addRowToTable(15 , 16 , 121, 60 );
+		addRowToTable(14 , 11 , 111, 58 );
 		
 	}
 	
 	
-	
-/////////////////////////////////////////////////////////////////////////////////////	
-	// test to see if the dimentsion of a shape will be properly added to table:
-
-	
-//	public void addShapeDimensions ( int x, int y,int width , int height){
-//		
-//		JPanel jp = new JPanel();
-//		jp.setLayout(new GridLayout(1, 4));
-//		
-//		jp.add(new JTextField(x));
-//		jp.add(new JTextField(y));
-//		jp.add(new JTextField(width));
-//		jp.add(new JTextField(height));
-//		
-//		
-//		//remove(tablePanel);
-//		tablePanel.add(jp);
-//		add(tablePanel);
-//		
-//	}
-/////////////////////////////////////////////////
 	private void setUpTable() {
-		tablePanel.setLayout(new GridLayout(1,4));
-		tablePanel.add(xCoordinate);
-		tablePanel.add(yCoordinate);
-		tablePanel.add(width);
-		tablePanel.add(height);
+
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setPreferredSize(new Dimension(300, 200));
+		table.setPreferredSize(new Dimension(300, 200));
+		table.setGridColor(Color.blue);
+		//table.setTableHeader( table_model );
 		
+		tablePanel.add(scrollPane);
 		add(tablePanel);
 	}
 
+	
+	
+	public void addRowToTable( int x, int y, int width , int height){
+		
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.addRow(new Object[]{x ,  y, width , height});
+		
+	}
+	
+	
 	private void setUpMoveButtons() {
+		
 		JPanel jp = new JPanel();
 		jp.setLayout(new FlowLayout());
-		
 		JButton moveFront = new JButton("Move To Front");
 		moveFront.addActionListener(moveListener);
 		JButton moveBack = new JButton("Move To Back");
 		moveBack.addActionListener(moveListener);
 		JButton removeShape = new JButton("Remove Shape");
 		removeShape.addActionListener(moveListener);
-		
 		jp.add(moveFront);
 		jp.add(moveBack);
 		jp.add(removeShape);
@@ -129,8 +129,6 @@ public class Canvas extends JPanel {
 		jp.add(fontTesterLabel);
 		this.add(jp);
 	
-
-
 	}
 
 	public void addShapeButtons(){
@@ -152,7 +150,6 @@ public class Canvas extends JPanel {
 		TextButton = new JButton("Text");
 		TextButton.addActionListener( shapeListener);
 
-
 		setColor = new JButton("Set Color");
 		setColor.addActionListener(colorListener);
 
@@ -162,7 +159,7 @@ public class Canvas extends JPanel {
 		container.add(LineButton);
 		container.add(TextButton);
 		container.add(setColor);
-
+		
 		this.add(container );
 		add(setColor);
 
@@ -204,14 +201,12 @@ public class Canvas extends JPanel {
 				System.out.println(selectedBackground.toString());
 				// set the color here
 
-
 			}
 		}
 	};
 
 	
 	ActionListener fontListener = new ActionListener() {
-		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JComboBox source = (JComboBox) e.getSource();

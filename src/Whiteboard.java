@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 
 public class Whiteboard extends JFrame{
 
-	
 	public Whiteboard(String title, JPanel controls , JPanel whiteBoard){
 		
 		super( title );       
@@ -24,7 +23,7 @@ public class Whiteboard extends JFrame{
 		
 		JPanel whiteBoard = new JPanel();
 		whiteBoard.setPreferredSize(new Dimension(400, 400));
-		whiteBoard.setBackground(Color.red);
+		whiteBoard.setBackground(Color.lightGray);
 		Canvas canvas = new Canvas();
 		Whiteboard board = new Whiteboard("WhiteBoard" , canvas , whiteBoard );
 		board.setVisible(true);
