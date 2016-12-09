@@ -70,6 +70,11 @@ public class DShapeModel implements Serializable {
        return rect;
    }
    
+   
+   public void updateRect(){
+	   rect = new Rectangle(x, y, width, height);
+   }
+   
    public static String getShape(DShape shape) {
 	   if (shape instanceof DRect) return "rectangle";
 	   // TODO add more instances;

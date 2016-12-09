@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -12,6 +13,7 @@ import java.awt.LayoutManager;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.prefs.BackingStoreException;
 
@@ -28,7 +30,10 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel; 
 
 public class Canvas extends JPanel {
-
+	
+	JPanel whiteBoard = new JPanel();
+	
+	static ArrayList<DShape> shapes = new ArrayList<DShape>();
 	String column_names[]= {"X","Y","Width","Height"};
 	DefaultTableModel table_model = new DefaultTableModel(column_names ,0);
 	JTable table = new JTable(table_model);
@@ -51,11 +56,16 @@ public class Canvas extends JPanel {
 	JPanel p = new JPanel() ;
 	public Canvas (){
 
-		setSize(new Dimension(400,400));
+		setSize(new Dimension(800,400));
 		//setBackground(Color.BLUE);
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		whiteBoard.setPreferredSize(new Dimension(400, 400));
+		whiteBoard.setBackground(Color.lightGray);
+		
+		add(whiteBoard);
 		addShapeButtons();
 		add(setColor);
+		
 		setUpFontChooser();
 		setUpMoveButtons();
 		setUpTable();
@@ -124,7 +134,7 @@ public class Canvas extends JPanel {
 		JTextField textField =  new JTextField(10);
 		textField.setSize(new Dimension(200, 100));
 
-		jp.add(textField);
+		jp.add(textField); 
 		jp.add(fontComboBox);
 		jp.add(fontTesterLabel);
 		this.add(jp);
@@ -165,6 +175,31 @@ public class Canvas extends JPanel {
 
 	}
 	
+	 public void paintComponent(Graphics g) {
+	        super.paintComponent(g);
+	        for(DShape shape: shapes){
+	            
+	            if(shape instanceof DRect){
+	                DRect rectangle = new DRect(shape.model);
+	                rectangle.draw(g);
+	                
+	            }
+	            else if(shape instanceof DOval){
+	                DOval oval = new DOval(shape.model);
+	                oval.draw(g);
+	            }
+	            else if(shape instanceof DLine){
+	               // line.draw(g);
+	            }
+	            else if(shape instanceof DText){
+	            	DText text = new DText(shape.model);
+	            	text.draw(g);
+	            }
+	        }
+	    }
+	
+	
+	
 	//Action Listeners 
 	ActionListener shapeListener = new ActionListener() {
 
@@ -176,7 +211,8 @@ public class Canvas extends JPanel {
 
 			if(text.equalsIgnoreCase("rect")){
 				// actions for drawing the rectangle here. 
-
+				shapes.add(new DRect(new DRectModel()));
+			    repaint();
 				
 			}else if (text.equalsIgnoreCase("oval")){
 				// actions for drawing the rectangle here. 
@@ -241,7 +277,9 @@ public class Canvas extends JPanel {
 	};
 	
 	// Page 3, paragraph 3
-	public void addShape(DShapeModel shape) {	
+	public void addShape(DShape shape) {	
+	
+		//Whiteboard.addShape(shape);
 
 	}
 }
