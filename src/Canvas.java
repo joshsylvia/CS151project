@@ -34,10 +34,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel; 
 
-public class Canvas extends JPanel  {
+public class Canvas extends JPanel implements Serializable {
 	
 	
-	private JPanel whiteBoard1;// = new JPanel();
+	private JPanel whiteBoard1;
 	static String topLeft;
 	static String topRight;
 	static String bottomLeft;
@@ -196,7 +196,7 @@ public class Canvas extends JPanel  {
 
 	}
 	
-	class whiteBoard1 extends JPanel implements Serializable {
+	class whiteBoard1 extends JPanel  {
 	
 	whiteBoard1() {
 		setPreferredSize(new Dimension(400,400));
@@ -233,23 +233,18 @@ public class Canvas extends JPanel  {
 	    }
     class CanvasMouseHandler extends MouseAdapter {
 
-
-
         public void mousePressed(MouseEvent e){
             clickedX = e.getX();
             clickedY = e.getY();
-            
-            
+                       
             DShape clicked = shapeContains(e.getPoint());
-            
-            
+                   
             if(selectedShape != null){
-                knobClicked = knobsContains(selectedShape, e.getPoint());
+             //   knobClicked = knobsContains(selectedShape, e.getPoint());
                 currentW = selectedShape.model.getWidth();
-                if(knobClicked != null){
-                    
-                    isKnobClicked = true;
-                }
+                
+                if(knobClicked != null)    isKnobClicked = true;
+                
             }
              
             if(clicked != null){
@@ -383,11 +378,11 @@ public class Canvas extends JPanel  {
 		public void actionPerformed(ActionEvent actionEvent) {
 			Color initialBackground = setColor.getBackground();
 			selectedBackground = JColorChooser.showDialog(null, "ladimer", initialBackground);
-
+			
 			if (selectedBackground != null) {
 				System.out.println(selectedBackground.toString());
 				// set the color here
-
+				selectedShape.model.setColor(selectedBackground);
 			}
 		}
 	};
