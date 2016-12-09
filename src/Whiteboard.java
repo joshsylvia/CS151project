@@ -13,7 +13,7 @@ public class Whiteboard extends JFrame{
 	static ArrayList<DShape> shapes = new ArrayList<DShape>();
 	
 	public Whiteboard(String title, JPanel controls ){
-		
+
 		super( title );       
 		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 	    setSize( 800, 400 );
@@ -22,7 +22,7 @@ public class Whiteboard extends JFrame{
 	    
 		//whiteBoard.setBackground(Color.lightGray);
 	    add(controls, BorderLayout.WEST);
-	    //add(whiteBoard, BorderLayout.EAST);
+	 //   add(canvas, BorderLayout.EAST);
 	    
 	}
 	

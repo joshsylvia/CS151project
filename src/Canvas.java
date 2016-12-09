@@ -32,7 +32,7 @@ import javax.swing.table.DefaultTableModel;
 public class Canvas extends JPanel {
 	
 	
-	JPanel whiteBoard = new JPanel();
+	private JPanel whiteBoard1;// = new JPanel();
 	static String topLeft;
 	static String topRight;
 	static String bottomLeft;
@@ -63,13 +63,14 @@ public class Canvas extends JPanel {
 	JPanel p = new JPanel() ;
 	public Canvas (){
 
+		whiteBoard1 = new whiteBoard1();
 		setSize(new Dimension(800,400));
 		setBackground(Color.BLUE);
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		whiteBoard.setPreferredSize(new Dimension(400, 400));
-		whiteBoard.setBackground(Color.lightGray);
+		whiteBoard1.setPreferredSize(new Dimension(400, 400));
+		whiteBoard1.setBackground(Color.WHITE);
 		
-		add(whiteBoard);
+		add(whiteBoard1);
 		addShapeButtons();
 		add(setColor);
 		
@@ -182,12 +183,21 @@ public class Canvas extends JPanel {
 
 	}
 	
+	class whiteBoard1 extends JPanel {
+	
+	whiteBoard1() {
+		setPreferredSize(new Dimension(400,400));
+		setBackground(Color.WHITE);
+	}
+	
+	@Override
 	 public void paintComponent(Graphics g) {
 	        super.paintComponent(g);
 	        for(DShape shape: shapes){
 	            
 	            if(shape instanceof DRect){
 	                DRect rectangle = new DRect(shape.model);
+	                
 	                rectangle.draw(g);
 	                
 	            }
@@ -206,7 +216,7 @@ public class Canvas extends JPanel {
 	        }
 	    }
 	
-	
+	}
 	
 	//Action Listeners 
 	ActionListener shapeListener = new ActionListener() {

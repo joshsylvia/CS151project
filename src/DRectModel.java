@@ -11,7 +11,7 @@ public class DRectModel extends DShapeModel {
             Rectangle[] knob = getKnobs();
             for (int i = 0; i < knobs.length; i++) {
                 g.setColor(Color.BLACK);
-               // g.fillRect(knob[i].x, knob[i].y, knob[i].width, knob[i].height);
+                g.fillRect(knob[i].x, knob[i].y, knob[i].width, knob[i].height);
             }  
         }
         

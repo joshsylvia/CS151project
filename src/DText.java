@@ -19,7 +19,7 @@ public class DText extends DShape {
         int width = g.getFontMetrics().stringWidth(Canvas.textField.getText());
         model.setWidth(width);//sets width of the rectangle holding the text
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
- //       DTextModel.showKnobsIfSelected(g);
+        DTextModel.showKnob(g);
         
     }
     
