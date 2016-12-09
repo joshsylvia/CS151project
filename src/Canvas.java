@@ -10,9 +10,13 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -30,7 +34,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel; 
 
-public class Canvas extends JPanel implements Serializable {
+public class Canvas extends JPanel  {
 	
 	
 	private JPanel whiteBoard1;// = new JPanel();
@@ -47,6 +51,18 @@ public class Canvas extends JPanel implements Serializable {
 	JTable table = new JTable(table_model);
 	JButton RectButton, OvalButton , LineButton , TextButton, setColor ;
 	JLabel text = new JLabel("Add ");
+	
+    static DShape selectedShape;
+    static int clickedX;
+    static int clickedY;
+    static int currentW = 50;
+
+    static int diffInX;
+    static int diffInY;
+    
+    boolean isKnobClicked = false;
+    static Rectangle knobClicked;
+    boolean differenceCalculated = false;
 	
 	private JComboBox fontComboBox  ;
 	JLabel fontTesterLabel = new JLabel("This is a sample");
@@ -76,6 +92,7 @@ public class Canvas extends JPanel implements Serializable {
 		setUpFontChooser();
 		setUpMoveButtons();
 		setUpTable();		
+
 	}
 	
 	
@@ -179,11 +196,14 @@ public class Canvas extends JPanel implements Serializable {
 
 	}
 	
-	class whiteBoard1 extends JPanel {
+	class whiteBoard1 extends JPanel implements Serializable {
 	
 	whiteBoard1() {
 		setPreferredSize(new Dimension(400,400));
 		setBackground(Color.WHITE);
+		CanvasMouseHandler handler = new CanvasMouseHandler();
+        addMouseListener(handler);
+        addMouseMotionListener(handler);
 	}
 	
 	@Override
@@ -211,6 +231,119 @@ public class Canvas extends JPanel implements Serializable {
 	            }
 	        }
 	    }
+    class CanvasMouseHandler extends MouseAdapter {
+
+
+
+        public void mousePressed(MouseEvent e){
+            clickedX = e.getX();
+            clickedY = e.getY();
+            
+            
+            DShape clicked = shapeContains(e.getPoint());
+            
+            
+            if(selectedShape != null){
+                knobClicked = knobsContains(selectedShape, e.getPoint());
+                currentW = selectedShape.model.getWidth();
+                if(knobClicked != null){
+                    
+                    isKnobClicked = true;
+                }
+            }
+             
+            if(clicked != null){
+                setSelectedShape(clicked);
+                /*System.out.println("\nLine 64 - " + this.getClass().getSimpleName());
+                System.out.println("shape clicked = " + DShapeModel.getShape(selectedShape));*/
+                repaint();
+            }
+            else {
+                selectedShape.isSelected = false;
+                setSelectedShape(null);
+               /* System.out.println("\nLine 68 - " + this.getClass().getSimpleName());
+                System.out.println("shape clicked = " + DShapeModel.getShape(selectedShape));*/
+                repaint();
+            }
+            
+        }
+
+        public void setSelectedShape(DShape clicked) {
+            /*System.out.println("\nLine 112 - " + this.getClass().getSimpleName());
+            System.out.println("shape clicked = " + DShapeModel.getShape(clicked));*/
+            if(selectedShape != clicked){
+                if(selectedShape != null){
+                 //   setSelected(false);
+                }
+                selectedShape = clicked;
+                if(selectedShape != null){
+              //      setSelected(true);
+                }
+                /*System.out.println("\nLine 136 - " + this.getClass().getSimpleName());
+                System.out.println(DShapeModel.getShape(selectedShape) +
+                        " at index " + (shapes.indexOf(selectedShape) + 1) + " is selected");*/
+          //      DataTable.highlightSelectedRow(shapes.indexOf(selectedShape));
+            }
+        }   
+
+        public void mouseDragged(MouseEvent e) {
+
+            if(selectedShape != null){
+                
+                int currentWidth = selectedShape.model.getWidth();
+                int currentHeight = selectedShape.model.getHeight();
+                int currentX = selectedShape.model.getX();
+                int currentY = selectedShape.model.getY();
+                int changeX = e.getX() - currentX;
+                int changeY = e.getY() - currentY;
+                
+                if(isKnobClicked){
+                    if(knobClicked.equals(selectedShape.model.knobs[0])){
+                        knobClicked = new Rectangle(e.getX(), e.getY(), 9, 9);
+            //            resizingUpdate(e.getX(), e.getY(), currentWidth - changeX, currentHeight - changeY);
+                    }
+                    else if(knobClicked.equals(selectedShape.model.knobs[1])){
+                        knobClicked = new Rectangle(e.getX() - 9, e.getY(), 9, 9);
+           //             resizingUpdate(currentX, e.getY(), changeX, currentHeight - changeY);                        
+                    }
+                    else if(knobClicked.equals(selectedShape.model.knobs[2])){
+                        knobClicked = new Rectangle(e.getX(), e.getY() - 9, 9, 9);
+          //              resizingUpdate(e.getX(), currentY, currentWidth - changeX, changeY);
+                    }else{
+                        knobClicked = new Rectangle(e.getX() - 9, e.getY() - 9, 9, 9);
+            //            resizingUpdate(currentX, currentY, changeX, changeY);
+                    }
+                }
+                         
+                else {
+                    if (!differenceCalculated) {
+                        diffInX = clickedX - selectedShape.model.getX();
+                        diffInY = clickedY - selectedShape.model.getY();
+                    }
+                    differenceCalculated = true;
+
+                    int newX = e.getX() - diffInX;
+                    int newY = e.getY() - diffInY;
+
+                    selectedShape.model.setX(newX);
+                    selectedShape.model.setY(newY);
+                    selectedShape.model.setShapeRectangle();
+
+           //         setNewCoordinates(newX, newY, selectedShape.model.getWidth(), selectedShape.model.getHeight());
+            //        DataTable.updateRow(shapes.indexOf(selectedShape), DShapeModel.getShape(selectedShape),
+             //               newX, newY, selectedShape.model.getWidth(), selectedShape.model.getHeight());
+                    repaint();
+
+                }
+            }
+        }
+   
+                
+  
+        public void mouseReleased(MouseEvent e) {
+            isKnobClicked = false;
+        }
+    }
 	
 	}
 	
@@ -303,4 +436,42 @@ public class Canvas extends JPanel implements Serializable {
 	    repaint();
 
 	}
+	
+    public Rectangle knobsContains(DShape shape, Point p){
+        for(int i = 0; i < shape.model.knobs.length ; i++){
+            Rectangle r = shape.model.knobs[i];
+            if(r.contains(p)){
+                return r;
+            }
+        }
+        return null;
+    }
+    public DShape shapeContains(Point p){
+        for(int i = shapes.size() - 1; i >= 0; i--){
+            DShape r = shapes.get(i);
+            if(r.model.getShapeRectangle().contains(p)) {
+                getSelectedShapeCoords(i);
+                return r;
+            }
+        }
+        return null;
+    }
+    public void getSelectedShapeCoords(int i) {
+        int shapeWidth = shapes.get(i).model.getWidth();
+        int shapeHeight = shapes.get(i).model.getHeight();
+
+        int selectedTopLeftX = shapes.get(i).model.getX();
+        int selectedTopLeftY = shapes.get(i).model.getY();
+
+        setNewCoordinates(selectedTopLeftX, selectedTopLeftY, shapeWidth, shapeHeight);
+    }
+    
+    public void setNewCoordinates(int x, int y, int width, int height) {
+        topLeft = x + "," + y;
+        topRight = (x + width) + "," + y;
+        bottomLeft = x + "," + (y + height);
+        bottomRight = (x + width) + "," + (y + height);
+    }
+    
+	
 }
