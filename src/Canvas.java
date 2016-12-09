@@ -90,12 +90,16 @@ public class Canvas extends JPanel implements Serializable {
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setPreferredSize(new Dimension(300, 200));
-		table.setPreferredSize(new Dimension(300, 200));
+		//JScrollPane scroll = new JScrollPane(table);
+        scrollPane.createHorizontalScrollBar();
+		//table.setPreferredSize(new Dimension(300, 200));
 		table.setGridColor(Color.blue);
 		//table.setTableHeader( table_model );
 		
-		tablePanel.add(scrollPane);
-		add(tablePanel);
+		//tablePanel.add(scrollPane);
+		add(scrollPane);
+		
+		//.add(new JScrollPane(table));
 	}
 
 	
@@ -230,7 +234,9 @@ public class Canvas extends JPanel implements Serializable {
 
 			if(text.equalsIgnoreCase("rect")){
 				// actions for drawing the rectangle here. 
-				shapes.add(new DRect(new DRectModel()));
+				DShape  ds= new DRect(new DRectModel()) ;
+				shapes.add(ds);
+				addRowToTable( ds.getModel().getX() , ds.getModel().getY(),ds.getModel().getWidth(), ds.getModel().getHeight() );
 			    repaint();
 				
 			}else if (text.equalsIgnoreCase("oval")){

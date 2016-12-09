@@ -16,7 +16,7 @@ public class Whiteboard extends JFrame{
 
 		super( title );       
 		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-	    setSize( 800, 400 );
+	    setSize( 430, 800 );
 	    setLayout( new BorderLayout() ); 
 	   // setContentPane(getContentPane());
 	    
