@@ -22,7 +22,7 @@ public class Whiteboard extends JFrame{
 	    
 		//whiteBoard.setBackground(Color.lightGray);
 	    add(controls, BorderLayout.WEST);
-	  //  add(whiteBoard, BorderLayout.EAST);
+	    //add(whiteBoard, BorderLayout.EAST);
 	    
 	}
 	

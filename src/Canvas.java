@@ -31,8 +31,15 @@ import javax.swing.table.DefaultTableModel;
 
 public class Canvas extends JPanel {
 	
-	JPanel whiteBoard = new JPanel();
 	
+	JPanel whiteBoard = new JPanel();
+	static String topLeft;
+	static String topRight;
+	static String bottomLeft;
+	static String bottomRight;
+	
+	static JTextField textField;
+	static String item;
 	static ArrayList<DShape> shapes = new ArrayList<DShape>();
 	String column_names[]= {"X","Y","Width","Height"};
 	DefaultTableModel table_model = new DefaultTableModel(column_names ,0);
@@ -57,7 +64,7 @@ public class Canvas extends JPanel {
 	public Canvas (){
 
 		setSize(new Dimension(800,400));
-		//setBackground(Color.BLUE);
+		setBackground(Color.BLUE);
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		whiteBoard.setPreferredSize(new Dimension(400, 400));
 		whiteBoard.setBackground(Color.lightGray);
@@ -131,7 +138,7 @@ public class Canvas extends JPanel {
 		fontComboBox.addActionListener(fontListener);
 
 
-		JTextField textField =  new JTextField(10);
+		textField =  new JTextField(10);
 		textField.setSize(new Dimension(200, 100));
 
 		jp.add(textField); 
@@ -189,7 +196,8 @@ public class Canvas extends JPanel {
 	                oval.draw(g);
 	            }
 	            else if(shape instanceof DLine){
-	               // line.draw(g);
+	            	DLine line = new DLine(shape.model);
+	            	line.draw(g);
 	            }
 	            else if(shape instanceof DText){
 	            	DText text = new DText(shape.model);
@@ -216,13 +224,17 @@ public class Canvas extends JPanel {
 				
 			}else if (text.equalsIgnoreCase("oval")){
 				// actions for drawing the rectangle here. 
+				shapes.add(new DOval(new DOvalModel()));
+			    repaint();
 
 			}else if (text.equalsIgnoreCase("line")){
 				// actions for drawing the rectangle here. 
-
+				shapes.add(new DLine(new DLineModel()));
+			    repaint();
 			}else if (text.equalsIgnoreCase("text")){
 				// actions for drawing the rectangle here. 
-
+				shapes.add(new DText(new DTextModel()));
+			    repaint();
 			}
 
 		}
