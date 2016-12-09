@@ -13,6 +13,7 @@ import java.awt.LayoutManager;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.prefs.BackingStoreException;
@@ -29,7 +30,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel; 
 
-public class Canvas extends JPanel {
+public class Canvas extends JPanel implements Serializable {
 	
 	
 	private JPanel whiteBoard1;// = new JPanel();
@@ -65,7 +66,7 @@ public class Canvas extends JPanel {
 
 		whiteBoard1 = new whiteBoard1();
 		setSize(new Dimension(800,400));
-		setBackground(Color.BLUE);
+	//	setBackground(Color.BLUE);
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		whiteBoard1.setPreferredSize(new Dimension(400, 400));
 		whiteBoard1.setBackground(Color.WHITE);
@@ -268,7 +269,7 @@ public class Canvas extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JComboBox source = (JComboBox) e.getSource();
-		    String item = (String) source.getSelectedItem();
+		    item = (String) source.getSelectedItem();
 		    selectedFont = new Font(item, Font.PLAIN, 12);
 		    fontTesterLabel.setFont(selectedFont);
 			
