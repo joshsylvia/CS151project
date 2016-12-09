@@ -45,28 +45,26 @@ public class Canvas extends JPanel implements Serializable {
 	String column_names[]= {"X","Y","Width","Height"};
 	DefaultTableModel table_model = new DefaultTableModel(column_names ,0);
 	JTable table = new JTable(table_model);
-	
 	JButton RectButton, OvalButton , LineButton , TextButton, setColor ;
 	JLabel text = new JLabel("Add ");
 	
 	private JComboBox fontComboBox  ;
 	JLabel fontTesterLabel = new JLabel("This is a sample");
-	Font selectedFont ;
+	
+	Font selectedFont ; 
 	Color selectedBackground;
+	
 	JPanel tablePanel = new JPanel();
 	JTextField xCoordinate =  new JTextField("X"); 
 	JTextField yCoordinate =  new JTextField("Y"); 
 	JTextField width =  new JTextField("Width"); 
 	JTextField height =  new JTextField("Height"); 
-	
 
-	//400 x 400
 	JPanel p = new JPanel() ;
 	public Canvas (){
 
 		whiteBoard1 = new whiteBoard1();
 		setSize(new Dimension(800,400));
-	//	setBackground(Color.BLUE);
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		whiteBoard1.setPreferredSize(new Dimension(400, 400));
 		whiteBoard1.setBackground(Color.WHITE);
@@ -77,12 +75,7 @@ public class Canvas extends JPanel implements Serializable {
 		
 		setUpFontChooser();
 		setUpMoveButtons();
-		setUpTable();
-		//this is a test.
-		addRowToTable(10 , 10 , 111, 58 );
-		addRowToTable(15 , 16 , 121, 60 );
-		addRowToTable(14 , 11 , 111, 58 );
-		
+		setUpTable();		
 	}
 	
 	
@@ -90,19 +83,12 @@ public class Canvas extends JPanel implements Serializable {
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setPreferredSize(new Dimension(300, 200));
-		//JScrollPane scroll = new JScrollPane(table);
         scrollPane.createHorizontalScrollBar();
-		//table.setPreferredSize(new Dimension(300, 200));
 		table.setGridColor(Color.blue);
-		//table.setTableHeader( table_model );
-		
-		//tablePanel.add(scrollPane);
 		add(scrollPane);
 		
-		//.add(new JScrollPane(table));
 	}
 
-	
 	
 	public void addRowToTable( int x, int y, int width , int height){
 		
@@ -111,6 +97,11 @@ public class Canvas extends JPanel implements Serializable {
 		
 	}
 	
+	
+	public void removeRowFromTable(){
+		
+		((DefaultTableModel)table.getModel()).removeRow(1);
+	}
 	
 	private void setUpMoveButtons() {
 		
@@ -234,24 +225,22 @@ public class Canvas extends JPanel implements Serializable {
 
 			if(text.equalsIgnoreCase("rect")){
 				// actions for drawing the rectangle here. 
-				DShape  ds= new DRect(new DRectModel()) ;
-				shapes.add(ds);
-				addRowToTable( ds.getModel().getX() , ds.getModel().getY(),ds.getModel().getWidth(), ds.getModel().getHeight() );
-			    repaint();
+				DShape  ds = new DRect(new DRectModel()) ;
+				addShape(ds);
 				
 			}else if (text.equalsIgnoreCase("oval")){
 				// actions for drawing the rectangle here. 
-				shapes.add(new DOval(new DOvalModel()));
-			    repaint();
+				addShape(new DOval(new DOvalModel()));
+			    
 
 			}else if (text.equalsIgnoreCase("line")){
 				// actions for drawing the rectangle here. 
-				shapes.add(new DLine(new DLineModel()));
-			    repaint();
+				addShape(new DLine(new DLineModel()));
+			    
 			}else if (text.equalsIgnoreCase("text")){
 				// actions for drawing the rectangle here. 
-				shapes.add(new DText(new DTextModel()));
-			    repaint();
+				addShape(new DText(new DTextModel()));
+			   
 			}
 
 		}
@@ -299,6 +288,7 @@ public class Canvas extends JPanel implements Serializable {
 				
 			}else if (text.equalsIgnoreCase("remove shape")){
 				// actions for remove shape here. 
+				removeRowFromTable();
 				
 			}
 			
@@ -308,7 +298,9 @@ public class Canvas extends JPanel implements Serializable {
 	// Page 3, paragraph 3
 	public void addShape(DShape shape) {	
 	
-		//Whiteboard.addShape(shape);
+		shapes.add(shape);
+		addRowToTable( shape.getModel().getX() , shape.getModel().getY(),shape.getModel().getWidth(), shape.getModel().getHeight() );
+	    repaint();
 
 	}
 }
