@@ -70,6 +70,11 @@ public class DShapeModel implements Serializable {
        return rect;
    }
    
+   
+   public void updateRect(){
+	   rect = new Rectangle(x, y, width, height);
+   }
+   
    public static String getShape(DShape shape) {
 	   if (shape instanceof DRect) return "rectangle";
 	   // TODO add more instances;
@@ -77,17 +82,17 @@ public class DShapeModel implements Serializable {
    }
    
    public static Rectangle[] getKnobs() {
-/*
-       String[] topLeft = Canvas.selectedTopLeft.split(",");
-       String[] topRight = Canvas.selectedTopRight.split(",");
-       String[] bottomLeft = Canvas.selectedBottomLeft.split(",");
-       String[] bottomRight = Canvas.selectedBottomRight.split(",");
+
+       String[] topLeft = Canvas.topLeft.split(",");
+       String[] topRight = Canvas.topRight.split(",");
+       String[] bottomLeft = Canvas.bottomLeft.split(",");
+       String[] bottomRight = Canvas.bottomRight.split(",");
 
        knobs[0] = new Rectangle(Integer.parseInt(topLeft[0]), Integer.parseInt(topLeft[1]), knobSize, knobSize);
        knobs[1] = new Rectangle(Integer.parseInt(topRight[0]) - knobSize, Integer.parseInt(topRight[1]), knobSize, knobSize);
        knobs[2] = new Rectangle(Integer.parseInt(bottomLeft[0]), Integer.parseInt(bottomLeft[1])- knobSize, knobSize, knobSize);
        knobs[3] = new Rectangle(Integer.parseInt(bottomRight[0]) - knobSize, Integer.parseInt(bottomRight[1])- knobSize, knobSize, knobSize);
-*/
+
        return knobs;
    }
 }
