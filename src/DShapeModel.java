@@ -9,8 +9,8 @@ import java.io.Serializable;
  */
 public class DShapeModel implements Serializable {
 	
-    private static int knobSize; 
-    protected static Rectangle[] knobs; 
+    private static int knobize; 
+    protected static Rectangle[] knob; 
 
     private int x;
     private int y;
@@ -21,8 +21,8 @@ public class DShapeModel implements Serializable {
     
 
     public DShapeModel() {
-        knobSize = 6;
-        knobs = new Rectangle[4];
+        knobize = 6;
+        knob = new Rectangle[4];
         x = (int) (Math.random() * 350);
         y = (int) (Math.random() * 350);
         width = 50;
@@ -62,7 +62,7 @@ public class DShapeModel implements Serializable {
     public Color getColor() {
     	return color;
     }
-    //Updates the knobs rectangle position when dragged or resized
+    //Updates the knob rectangle position when dragged or resized
    public void setShapeRectangle() {
        rect = new Rectangle (x, y, width, height);
    }
@@ -81,18 +81,18 @@ public class DShapeModel implements Serializable {
 	   return "test";
    }
    
-   public static Rectangle[] getKnobs() {
+   public static Rectangle[] getknob() {
 
        String[] topLeft = Canvas.topLeft.split(",");
        String[] topRight = Canvas.topRight.split(",");
        String[] bottomLeft = Canvas.bottomLeft.split(",");
        String[] bottomRight = Canvas.bottomRight.split(",");
 
-       knobs[0] = new Rectangle(Integer.parseInt(topLeft[0]), Integer.parseInt(topLeft[1]), knobSize, knobSize);
-       knobs[1] = new Rectangle(Integer.parseInt(topRight[0]) - knobSize, Integer.parseInt(topRight[1]), knobSize, knobSize);
-       knobs[2] = new Rectangle(Integer.parseInt(bottomLeft[0]), Integer.parseInt(bottomLeft[1])- knobSize, knobSize, knobSize);
-       knobs[3] = new Rectangle(Integer.parseInt(bottomRight[0]) - knobSize, Integer.parseInt(bottomRight[1])- knobSize, knobSize, knobSize);
+       knob[0] = new Rectangle(Integer.parseInt(topLeft[0]), Integer.parseInt(topLeft[1]), knobize, knobize);
+       knob[1] = new Rectangle(Integer.parseInt(topRight[0]) - knobize, Integer.parseInt(topRight[1]), knobize, knobize);
+       knob[2] = new Rectangle(Integer.parseInt(bottomLeft[0]), Integer.parseInt(bottomLeft[1])- knobize, knobize, knobize);
+       knob[3] = new Rectangle(Integer.parseInt(bottomRight[0]) - knobize, Integer.parseInt(bottomRight[1])- knobize, knobize, knobize);
 
-       return knobs;
+       return knob;
    }
 }
