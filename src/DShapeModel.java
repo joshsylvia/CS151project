@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**
@@ -11,7 +13,7 @@ public class DShapeModel implements Serializable {
 	
     private static int knobize; 
     protected static Rectangle[] knob; 
-
+    ArrayList<ModelListener> listenerList = new ArrayList<ModelListener>();
     private int x;
     private int y;
     private int width;
@@ -33,19 +35,24 @@ public class DShapeModel implements Serializable {
  
     public void setX(int x) {
     	this.x = x;
+    	notifyListeners();
     }
     public void setY(int y) {
     	this.y = y;
+    	notifyListeners();
     }    
     public void setWidth(int w) {
     	width = w;
+    	notifyListeners();
     }    
     public void setHeight(int h) {
     	height = h;
+    	notifyListeners();
     }    
  
     public void setColor(Color c) {
     	color = c;
+    	notifyListeners();
     }    
     public int getX() {
     	return x;
@@ -66,6 +73,7 @@ public class DShapeModel implements Serializable {
 
    public void setShapeRectangle() {
        rect = new Rectangle (x, y, width, height);
+       notifyListeners();
    }
    public Rectangle getShapeRectangle() {
        return rect;
@@ -74,6 +82,7 @@ public class DShapeModel implements Serializable {
    
    public void updateRect(){
 	   rect = new Rectangle(x, y, width, height);
+	   notifyListeners();
    }
    
    public static String getShape(DShape shape) {
@@ -95,5 +104,21 @@ public class DShapeModel implements Serializable {
        knob[3] = new Rectangle(Integer.parseInt(bottomRight[0]) - knobize, Integer.parseInt(bottomRight[1])- knobize, knobize, knobize);
 
        return knob;
+   }
+   
+   public void notifyListeners(){
+	   Iterator iter = listenerList.iterator();
+	   while(iter.hasNext()){
+		   ModelListener m = (ModelListener) iter.next();
+		   m.modelChanged(this);
+	   }
+   }
+   
+   public void register(ModelListener m){
+	   listenerList.add(m);
+   }
+   
+   public void unRegister(ModelListener m){
+	   listenerList.remove(m);
    }
 }

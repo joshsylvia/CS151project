@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -28,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -37,7 +39,7 @@ import javax.swing.table.DefaultTableModel;
 public class Canvas extends JPanel implements Serializable {
 	
 	
-	private JPanel whiteBoard1;
+	static JPanel whiteBoard1;
 	static String topLeft;
 	static String topRight;
 	static String bottomLeft;
@@ -46,11 +48,24 @@ public class Canvas extends JPanel implements Serializable {
 	static JTextField textField;
 	static String item;
 	static ArrayList<DShape> shapes = new ArrayList<DShape>();
+	static ArrayList<DShapeModel> shapeModelList = new ArrayList<DShapeModel>();
 	String column_names[]= {"X","Y","Width","Height"};
 	DefaultTableModel table_model = new DefaultTableModel(column_names ,0);
 	JTable table = new JTable(table_model);
 	JButton RectButton, OvalButton , LineButton , TextButton, setColor ;
 	JLabel text = new JLabel("Add ");
+	
+	// For Save/open
+	static FileMonster fileOps;
+	static JPanel saveOpenPanel;
+	static JButton saveB, openB, saveImgB;
+		
+	// For Server
+	static ServerMonster serverOps;
+	static JPanel serverPanel;
+	static JButton server, client;
+	static JLabel statusL;
+		
 
 	Color cColor; 
     static DShape selectedShape;
@@ -79,7 +94,9 @@ public class Canvas extends JPanel implements Serializable {
 
 	JPanel p = new JPanel() ;
 	public Canvas (){
-
+		fileOps = new FileMonster(this);
+		serverOps = new ServerMonster(this);
+		
 		whiteBoard1 = new whiteBoard1();
 		setSize(new Dimension(800,400));
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -93,9 +110,56 @@ public class Canvas extends JPanel implements Serializable {
 		setUpFontChooser();
 		setUpMoveButtons();
 		setUpTable();		
+		setUpSaveOpen();
+		setUpServer();
 
 	}
 	
+	private void setUpSaveOpen(){
+		saveOpenPanel = new JPanel();
+		saveOpenPanel.setLayout(new FlowLayout());
+		saveB = new JButton("Save");
+		openB = new JButton("Open");
+		saveImgB = new JButton("Save Image");
+		saveOpenPanel.add(saveB);
+		saveOpenPanel.add(openB);
+		saveOpenPanel.add(saveImgB);
+		
+		openB.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                String result = JOptionPane.showInputDialog("File Name", null);
+                if (result != null) {
+                    File f = new File(result);
+                    fileOps.open(f);
+                }
+            }
+        });
+		
+		saveB.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                String result = JOptionPane.showInputDialog("File Name", null);
+                if (result != null) {
+                    File f = new File(result);
+                    fileOps.save(f);
+                }
+            }
+        });
+		
+		saveImgB.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                String result = JOptionPane.showInputDialog("File Name", null);
+                if (result != null) {
+                    File f = new File(result);
+                    fileOps.saveImage(f);
+                }
+            }
+        });
+		this.add(saveOpenPanel);
+	}
+	
+	private void setUpServer(){
+		
+	}
 	
 	private void setUpTable() {
 
@@ -198,7 +262,8 @@ public class Canvas extends JPanel implements Serializable {
 	}
 	
 	class whiteBoard1 extends JPanel  {
-	
+		int width = 400;
+		int height = 400;
 	whiteBoard1() {
 		setPreferredSize(new Dimension(400,400));
 		setBackground(Color.WHITE);
@@ -206,7 +271,12 @@ public class Canvas extends JPanel implements Serializable {
         addMouseListener(handler);
         addMouseMotionListener(handler);
 	}
-	
+	public int getWidth(){
+    	return width;
+    }
+    public int getHeight(){
+    	return height;
+    }
 	@Override
 	 public void paintComponent(Graphics g) {
 	        super.paintComponent(g);
@@ -343,21 +413,32 @@ public class Canvas extends JPanel implements Serializable {
 
 			if(text.equalsIgnoreCase("rect")){
 				// actions for drawing the rectangle here. 
-				DShape  ds = new DRect(new DRectModel()) ;
-				addShape(ds);
+				DShapeModel  dsm = new DRectModel();
+				dsm.register(serverOps);
+				shapeModelList.add(dsm);
+				addShape(dsm);
 				
 			}else if (text.equalsIgnoreCase("oval")){
 				// actions for drawing the rectangle here. 
-				addShape(new DOval(new DOvalModel()));
+				DShapeModel  dsm = new DOvalModel();
+				dsm.register(serverOps);
+				shapeModelList.add(dsm);
+				addShape(dsm);
 			    
 
 			}else if (text.equalsIgnoreCase("line")){
 				// actions for drawing the rectangle here. 
-				addShape(new DLine(new DLineModel()));
+				DShapeModel  dsm = new DLineModel();
+				dsm.register(serverOps);
+				shapeModelList.add(dsm);
+				addShape(dsm);
 			    
 			}else if (text.equalsIgnoreCase("text")){
 				// actions for drawing the rectangle here. 
-				addShape(new DText(new DTextModel()));
+				DShapeModel  dsm = new DTextModel();
+				dsm.register(serverOps);
+				shapeModelList.add(dsm);
+				addShape(dsm);
 			   
 			}
 
@@ -425,6 +506,25 @@ public class Canvas extends JPanel implements Serializable {
 	    
 		repaint();
 
+	}
+	
+	public void addShape(DShapeModel dsm){
+		if(dsm instanceof DRectModel){
+			DShape  ds = new DRect(dsm);
+			addShape(ds);
+		} else if (dsm instanceof DOvalModel){
+			DShape  ds = new DOval(dsm);
+			addShape(ds);
+		} else if (dsm instanceof DLineModel){
+			DShape  ds = new DLine(dsm);
+			addShape(ds);
+		} else if (dsm instanceof DTextModel){
+			DShape  ds = new DText(dsm);
+			addShape(ds);
+		} else {
+			System.out.println("Error adding shape");
+		}
+		
 	}
 	
     public void resizingUpdate(int x, int y, int width, int height){
