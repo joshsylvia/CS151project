@@ -7,9 +7,7 @@ public class DLineModel extends DShapeModel {
     public DLineModel() {
 
     }
-    
-    
-    
+   
     public static void showKnob(Graphics g) {
         if(DShape.isSelected) {
             Rectangle[] knob = getknob();

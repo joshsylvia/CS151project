@@ -91,12 +91,14 @@ public class Canvas extends JPanel implements Serializable {
 	JTextField yCoordinate =  new JTextField("Y"); 
 	JTextField width =  new JTextField("Width"); 
 	JTextField height =  new JTextField("Height"); 
-
 	JPanel p = new JPanel() ;
+	
+	
 	public Canvas (){
 		fileOps = new FileMonster(this);
 		serverOps = new ServerMonster(this);
 		
+		cColor = Color.LIGHT_GRAY;
 		whiteBoard1 = new whiteBoard1();
 		setSize(new Dimension(800,400));
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -271,12 +273,15 @@ public class Canvas extends JPanel implements Serializable {
         addMouseListener(handler);
         addMouseMotionListener(handler);
 	}
+	
 	public int getWidth(){
     	return width;
     }
+	
     public int getHeight(){
     	return height;
     }
+    
 	@Override
 	 public void paintComponent(Graphics g) {
 	        super.paintComponent(g);
@@ -325,7 +330,6 @@ public class Canvas extends JPanel implements Serializable {
                 selectedShape.isSelected = false;
                 setSelectedShape(null);
 
-                repaint();
             }
             
         }
@@ -339,6 +343,7 @@ public class Canvas extends JPanel implements Serializable {
                 selectedShape = clicked;
                 if(selectedShape != null){
                 	selectedShape.isSelected = true;
+                	cColor = selectedShape.model.getColor();
                 }
 
             }
@@ -455,10 +460,12 @@ public class Canvas extends JPanel implements Serializable {
 				if (selectedShape != null ) {
 					selectedShape.model.setColor(selectedBackground);
 					cColor = selectedBackground; 
+					repaint();
 				} else {
 					cColor = selectedBackground; 
 				}
 			}
+			
 		}
 	};
 
@@ -479,20 +486,30 @@ public class Canvas extends JPanel implements Serializable {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JButton button = (JButton)e.getSource();
-			//  System.out.println ( button.getText() );
 			String text = button.getText();
 
 			if(text.equalsIgnoreCase("move to front")){
-				// actions for move to front here. 
-				
+				if (selectedShape != null ) {
+		            DShape shape = selectedShape;
+		            shapes.remove(selectedShape);
+		            addShape(shape);
+				}
+				repaint();
 				
 			}else if (text.equalsIgnoreCase("move to back")){
-				// actions for move to back here. 
-				
+				if (selectedShape != null ) {				
+					DShape shape = selectedShape;
+					shapes.remove(selectedShape);
+					shapes.add(0, shape);
+				} 
+		        repaint();
+		        
 			}else if (text.equalsIgnoreCase("remove shape")){
-				// actions for remove shape here. 
-				removeRowFromTable();
+
+				removeRowFromTable();	
 				
+				
+				// needs more work remove last one throws error.
 			}
 			
 		}
@@ -534,7 +551,7 @@ public class Canvas extends JPanel implements Serializable {
         selectedShape.model.setHeight(height);
         selectedShape.model.updateRect();
         setNewCoordinates(selectedShape.model.getX(), selectedShape.model.getY(), selectedShape.model.getWidth(), selectedShape.model.getHeight());
-       // updateRow(shapes.indexOf(selectedShape), DShapeModel.getShape(selectedShape), selectedShape.model.getX(), selectedShape.model.getY(), selectedShape.model.getWidth(), selectedShape.model.getHeight());
+       // updateRow
         repaint();
     }
     
@@ -547,6 +564,7 @@ public class Canvas extends JPanel implements Serializable {
         }
         return null;
     }
+    
     public DShape shapeContains(Point p){
         for(int i = shapes.size() - 1; i >= 0; i--){
             DShape r = shapes.get(i);
@@ -557,6 +575,7 @@ public class Canvas extends JPanel implements Serializable {
         }
         return null;
     }
+    
     public void getSelectedShapeCoords(int i) {
         int shapeWidth = shapes.get(i).model.getWidth();
         int shapeHeight = shapes.get(i).model.getHeight();
@@ -566,6 +585,7 @@ public class Canvas extends JPanel implements Serializable {
     }
     
     public void setNewCoordinates(int x, int y, int width, int height) {
+    	System.out.println(x);
         topLeft = x + "," + y;
         topRight = (x + width) + "," + y;
         bottomLeft = x + "," + (y + height);
