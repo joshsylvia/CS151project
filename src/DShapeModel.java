@@ -85,12 +85,7 @@ public class DShapeModel implements Serializable {
 	   notifyListeners();
    }
    
-   public static String getShape(DShape shape) {
-	   if (shape instanceof DRect) return "rectangle";
-	   
-	   return "test";
-   }
-   
+
    public static Rectangle[] getknob() {
 
        String[] topLeft = Canvas.topLeft.split(",");

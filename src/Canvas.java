@@ -505,10 +505,9 @@ public class Canvas extends JPanel implements Serializable {
 		        repaint();
 		        
 			}else if (text.equalsIgnoreCase("remove shape")){
-
-				removeRowFromTable();	
-				
-				
+				shapes.remove(selectedShape);
+				removeRowFromTable();
+				repaint();
 				// needs more work remove last one throws error.
 			}
 			
