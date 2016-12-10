@@ -21,7 +21,7 @@ public class DShapeModel implements Serializable {
     
 
     public DShapeModel() {
-        knobize = 6;
+        knobize = 9;
         knob = new Rectangle[4];
         x = (int) (Math.random() * 350);
         y = (int) (Math.random() * 350);
@@ -62,7 +62,8 @@ public class DShapeModel implements Serializable {
     public Color getColor() {
     	return color;
     }
-    //Updates the knob rectangle position when dragged or resized
+
+
    public void setShapeRectangle() {
        rect = new Rectangle (x, y, width, height);
    }
@@ -77,7 +78,7 @@ public class DShapeModel implements Serializable {
    
    public static String getShape(DShape shape) {
 	   if (shape instanceof DRect) return "rectangle";
-	   // TODO add more instances;
+	   
 	   return "test";
    }
    

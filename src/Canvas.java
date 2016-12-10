@@ -51,7 +51,8 @@ public class Canvas extends JPanel implements Serializable {
 	JTable table = new JTable(table_model);
 	JButton RectButton, OvalButton , LineButton , TextButton, setColor ;
 	JLabel text = new JLabel("Add ");
-	
+
+	Color cColor; 
     static DShape selectedShape;
     static int clickedX;
     static int clickedY;
@@ -241,15 +242,13 @@ public class Canvas extends JPanel implements Serializable {
                    
             if(selectedShape != null){
                 knobClicked = knobContains(selectedShape, e.getPoint());
-                currentW = selectedShape.model.getWidth();
-                
+                currentW = selectedShape.model.getWidth();             
                 if(knobClicked != null)    isKnobClicked = true;
                 
             }
              
             if(clicked != null){
                 setSelectedShape(clicked);
-
                 repaint();
             }
             else {
@@ -318,7 +317,6 @@ public class Canvas extends JPanel implements Serializable {
                     selectedShape.model.setY(newY);
                     selectedShape.model.setShapeRectangle();
 
-
                     repaint();
 
                 }
@@ -373,11 +371,11 @@ public class Canvas extends JPanel implements Serializable {
 			
 			if (selectedBackground != null) {
 				System.out.println(selectedBackground.toString());
-				// set the color here
 				if (selectedShape != null ) {
 					selectedShape.model.setColor(selectedBackground);
+					cColor = selectedBackground; 
 				} else {
-					// set color for next objext that is added
+					cColor = selectedBackground; 
 				}
 			}
 		}
@@ -421,10 +419,11 @@ public class Canvas extends JPanel implements Serializable {
 	
 
 	public void addShape(DShape shape) {	
-	
+		shape.getModel().setColor(cColor);
 		shapes.add(shape);
 		addRowToTable( shape.getModel().getX() , shape.getModel().getY(),shape.getModel().getWidth(), shape.getModel().getHeight() );
-	    repaint();
+	    
+		repaint();
 
 	}
 	
@@ -461,10 +460,8 @@ public class Canvas extends JPanel implements Serializable {
     public void getSelectedShapeCoords(int i) {
         int shapeWidth = shapes.get(i).model.getWidth();
         int shapeHeight = shapes.get(i).model.getHeight();
-
         int selectedTopLeftX = shapes.get(i).model.getX();
         int selectedTopLeftY = shapes.get(i).model.getY();
-
         setNewCoordinates(selectedTopLeftX, selectedTopLeftY, shapeWidth, shapeHeight);
     }
     
@@ -473,6 +470,7 @@ public class Canvas extends JPanel implements Serializable {
         topRight = (x + width) + "," + y;
         bottomLeft = x + "," + (y + height);
         bottomRight = (x + width) + "," + (y + height);
+        
     }
     
 	
