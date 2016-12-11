@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 
 public class ServerMonster implements ModelListener{
 	
+	private final boolean DEBUG_MODE = true;
 	private int shapeCounter = 1;
 	private Canvas ref;
 	private ClientHandler clientHandler;
@@ -97,16 +98,22 @@ public class ServerMonster implements ModelListener{
 	public void updateNewClient(ObjectOutputStream oos){
 		// send oos a command to clear its screen
 		// cycle through shape list and send add command for all shapes
+		if(DEBUG_MODE)
+			System.out.println("updating new client");
 		Iterator iter = shapeList.iterator();
 		while(iter.hasNext()){
-			DShapeModel[] models = {(DShapeModel)iter.next()};
+			DShapeModel m = (DShapeModel)iter.next();
+			DShapeModel[] models = {m};
 			OutputStream memStream = new ByteArrayOutputStream();
 	        XMLEncoder xmlOut = new XMLEncoder(
 		            new BufferedOutputStream(memStream));
 	        xmlOut.writeObject(models);
 	        xmlOut.close();
 	        String xmlString = memStream.toString();
-	        
+	        if(DEBUG_MODE){
+				System.out.println("Sending model: " + m.toString());
+				System.out.println("XMLString sent: " + xmlString);
+			}
 	        try {
 	        	oos.writeObject("add");
 	            oos.flush();
@@ -123,8 +130,6 @@ public class ServerMonster implements ModelListener{
 	}
 	
 	public synchronized void sendRemote(String command, DShapeModel model) {
-		//System.out.println("Sending command: " + command);
-		//System.out.println("Sending model: " + model.toString());
 		OutputStream memStream = new ByteArrayOutputStream();
         XMLEncoder xmlOut = new XMLEncoder(
 	            new BufferedOutputStream(memStream));
@@ -132,8 +137,12 @@ public class ServerMonster implements ModelListener{
         xmlOut.writeObject(models);
         xmlOut.close();
         String xmlString = memStream.toString();
-        //System.out.println("XML encoded DSM: " + xmlString);
-        // Now write that xml string to all the clients.
+        if(DEBUG_MODE){
+			System.out.println("Sending command: " + command);
+			System.out.println("Sending model: " + model.toString());
+			System.out.println("XMLString sent: " + xmlString);
+		}
+		        // Now write that xml string to all the clients.
         Iterator<ObjectOutputStream> it = outputs.iterator();
         while (it.hasNext()) {
             ObjectOutputStream out = it.next();
@@ -212,8 +221,11 @@ public class ServerMonster implements ModelListener{
                     XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(xmlString.getBytes()));
                     dShapeArray = (DShapeModel[]) decoder.readObject();
                     DShapeModel model = dShapeArray[0];
-                    //System.out.println("Command received: " + command);
-                    //System.out.println("ShapeModel received: " + model.toString());
+                    if(DEBUG_MODE){
+                    	System.out.println("\nxmlString received: " + xmlString);
+                    	System.out.println("Command received: " + command);
+                    	System.out.println("ShapeModel received: " + model.toString());
+                    }
                     invokeToGUI(command, model);
                 }
             }

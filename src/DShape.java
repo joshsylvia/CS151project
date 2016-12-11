@@ -33,7 +33,7 @@ public class DShape implements Serializable, ModelListener {
 	
 	public String toString(){
 		String s = "";
-		s += "This shape isSelected: " + model.isSelected() + " Model: " + model.toString();
+		s += "This shape isSelected: " + model.getIsSelected() + " Model: " + model.toString();
 		return s;
 	}
 }
