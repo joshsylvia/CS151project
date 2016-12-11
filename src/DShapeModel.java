@@ -9,7 +9,7 @@ import java.util.Iterator;
  * Stores x and y coordinates
  * Store width and height of shape
  */
-public class DShapeModel implements Serializable{
+public class DShapeModel {
 	
     private static int knobize; 
     protected static Rectangle[] knob; 
@@ -32,10 +32,33 @@ public class DShapeModel implements Serializable{
         width = 50;
         height = 50;
         color = Color.GRAY;
+        text = "Hello";
         rect = new Rectangle(x, y, width, height);
         setIsSelected(false);
     }
+
+    private String text;
+    private String font; 
+    
  
+    
+    public void setText(String t) {
+    	text = t;
+    }
+    
+    public String getText() {
+    	return text;
+    }
+    
+    
+    public void setFontName(String f) {
+        font = f;
+    }
+    
+    public String getFontName() {
+        return font;
+    }
+    
     public void setX(int x) {
     	this.x = x;
     	notifyListeners();
@@ -105,6 +128,12 @@ public class DShapeModel implements Serializable{
    }
    
 
+   public void mimic(DShapeModel other) {
+       setID(other.getID());
+       setColor(other.getColor());
+       notifyListeners();
+   }
+   
    public static Rectangle[] getknob() {
 
        String[] topLeft = Canvas.topLeft.split(",");

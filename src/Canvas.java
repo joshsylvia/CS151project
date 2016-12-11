@@ -40,7 +40,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel; 
 
 public class Canvas extends JPanel implements Serializable {
-	final boolean DEBUG_MODE = true;
+	
 	int shapeCounter = 1;
 	JPanel controlPanel;
 	JPanel whiteBoard1;
@@ -104,7 +104,7 @@ public class Canvas extends JPanel implements Serializable {
 	public Canvas (){
 		controlPanel = new JPanel();
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-		//controlPanel.setPreferredSize(new Dimension(400,400));
+		controlPanel.setPreferredSize(new Dimension(400,400));
 		this.setLayout(new BorderLayout());
 		fileOps = new FileMonster(this);
 		serverOps = new ServerMonster(this);
@@ -577,6 +577,8 @@ public class Canvas extends JPanel implements Serializable {
 	public void addShape(DShape shape) {
 		if(shape.getModel().getColor().equals(Color.GRAY))
 			shape.getModel().setColor(cColor);
+		if (shape.getModel() instanceof DTextModel)
+			shape.getModel().setText((String)textField.getText());
 		shapes.add(shape);
 		addRowToTable( shape.getModel().getX() , shape.getModel().getY(),shape.getModel().getWidth(), shape.getModel().getHeight() );
 		repaint();
