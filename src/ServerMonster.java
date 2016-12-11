@@ -82,6 +82,18 @@ public class ServerMonster implements ModelListener{
 			
 	}
 	
+	public void move(String s, DShapeModel dsm){
+		if(inServerMode){
+			sendRemote(s, dsm);
+		}
+	}
+	
+	public void remove(DShapeModel dsm){
+		if(inServerMode){
+			sendRemote("remove", dsm);
+		}
+	}
+	
 	public void updateNewClient(ObjectOutputStream oos){
 		// send oos a command to clear its screen
 		// cycle through shape list and send add command for all shapes
@@ -226,7 +238,11 @@ public class ServerMonster implements ModelListener{
             	if(command.equals("add")){
             		ref.shapeModelList.add(model);
             		ref.addShape(model);
-            	} else if (command.equals("delete")){
+            	} else if (command.equals("remove")){
+            		System.out.println("In remove");
+            		int index = getModelIndex(model);
+            		shapeList.remove(index);
+            		ref.repaint();
             		
             	} else if (command.equals("change")){
             		DShapeModel myModel = findMyModel(model);
@@ -237,9 +253,25 @@ public class ServerMonster implements ModelListener{
             		}
             		
             	} else if (command.equals("front")){
+            		int index = getModelIndex(model);
+            		if(index >= 0){
+            			if(index != (shapeList.size()-1)){
+            				DShapeModel temp = shapeList.get(index+1);
+            				shapeList.set(index+1, model);
+            				shapeList.set(index, temp);
+            				ref.repaint();
+            			}
+            		}
             		
             	} else if (command.equals("back")){
-            		
+            		int index = getModelIndex(model);
+            		if(index > 0){
+            			DShapeModel temp = shapeList.get(index-1);
+            			shapeList.set(index-1, model);
+            			shapeList.set(index, temp);
+            			ref.repaint();
+            			
+            		}
             	} else {
             		System.out.println("Error: command not recognized");
             	}
@@ -262,6 +294,14 @@ public class ServerMonster implements ModelListener{
 		return result;
 	}
 	
+	public int getModelIndex(DShapeModel m) {
+		int result = -1;
+		for(int i = 0; i < shapeList.size(); i++){
+			if(shapeList.get(i).getID() == m.getID())
+				return i;
+		}
+		return result;
+	}
 	public void updateMyModel(DShapeModel myModel, DShapeModel newModel){
 		myModel.setX(newModel.getX());
 		myModel.setY(newModel.getY());
@@ -269,6 +309,7 @@ public class ServerMonster implements ModelListener{
 		myModel.setWidth(newModel.getWidth());
 		myModel.setColor(newModel.getColor());
 		myModel.setID(newModel.getID());
+		ref.repaint();
 	}
 	
 	private void tagCurrentShapes(){

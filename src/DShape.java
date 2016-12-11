@@ -1,3 +1,4 @@
+import java.awt.Graphics;
 import java.io.Serializable;
 
 public class DShape implements Serializable, ModelListener {
@@ -25,4 +26,8 @@ public class DShape implements Serializable, ModelListener {
 		// is detected
 		
 	}
+	
+	public void draw(Graphics g) {
+        draw(g);      
+    }
 }

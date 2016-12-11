@@ -317,27 +317,26 @@ public class Canvas extends JPanel implements Serializable {
 	@Override
 	 public void paintComponent(Graphics g) {
 	        super.paintComponent(g);
-	        for(DShape shape: shapes){
+	        shapes.clear();
+	        DShape newShape = null;
+	        for(DShapeModel shape: shapeModelList){
 	            
-	            if(shape instanceof DRect){
-	                DRect rectangle = new DRect(shape.model);
-	                
-	                rectangle.draw(g);
-	                
+	            if(shape instanceof DRectModel){
+	                newShape = new DRect(shape);  
 	            }
-	            else if(shape instanceof DOval){
-	                DOval oval = new DOval(shape.model);
-	                oval.draw(g);
+	            else if(shape instanceof DOvalModel){
+	            	newShape = new DOval(shape);
 	            }
-	            else if(shape instanceof DLine){
-	            	DLine line = new DLine(shape.model);
-	            	line.draw(g);
+	            else if(shape instanceof DLineModel){
+	            	newShape = new DLine(shape);
 	            }
-	            else if(shape instanceof DText){
-	            	DText text = new DText(shape.model);
-	            	text.draw(g);
+	            else if(shape instanceof DTextModel){
+	            	newShape = new DText(shape);
 	            }
+	            newShape.draw(g);
+	            shapes.add(newShape);
 	        }
+	        
 	    }
     class CanvasMouseHandler extends MouseAdapter {
 
@@ -521,23 +520,36 @@ public class Canvas extends JPanel implements Serializable {
 			if(text.equalsIgnoreCase("move to front")){
 				if (selectedShape != null ) {
 		            DShape shape = selectedShape;
+		            DShapeModel temp = shape.model;
 		            shapes.remove(selectedShape);
+		            shapeModelList.remove(temp);
 		            addShape(shape);
+		            shapeModelList.add(temp);
+		            serverOps.move("front", temp);
 				}
 				repaint();
 				
 			}else if (text.equalsIgnoreCase("move to back")){
 				if (selectedShape != null ) {				
 					DShape shape = selectedShape;
+					DShapeModel temp = shape.model;
 					shapes.remove(selectedShape);
+					shapeModelList.remove(temp);
 					shapes.add(0, shape);
+					shapeModelList.add(0, temp);
+					serverOps.move("back", temp);
 				} 
 		        repaint();
 		        
 			}else if (text.equalsIgnoreCase("remove shape")){
-				shapes.remove(selectedShape);
-				DShape.isSelected = false;
-				
+				if(selectedShape != null){
+					shapes.remove(selectedShape);
+					selectedShape.model.unRegister(serverOps);
+					serverOps.remove(selectedShape.model);
+					shapeModelList.remove(selectedShape.model);
+					DShape.isSelected = false;
+					selectedShape = null;
+				}
 				removeRowFromTable(); 
 				repaint();
 				// needs more work remove last one throws error.
