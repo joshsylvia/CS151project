@@ -584,6 +584,8 @@ public class Canvas extends JPanel implements Serializable {
 	public void addShape(DShape shape) {
 		if(shape.getModel().getColor().equals(Color.GRAY))
 			shape.getModel().setColor(cColor);
+		if (shape.getModel() instanceof DTextModel)
+			shape.getModel().setText((String)textField.getText());
 		shapes.add(shape);
 		addRowToTable( shape.getModel().getX() , shape.getModel().getY(),shape.getModel().getWidth(), shape.getModel().getHeight() );
 		repaint();
