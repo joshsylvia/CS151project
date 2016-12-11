@@ -21,17 +21,14 @@ public class FileMonster {
 	public void open(File f){
 		DShapeModel[] dShapeArray = null;
         try {
-            // Create an XMLDecoder around the file
             XMLDecoder xmlIn = new XMLDecoder(new BufferedInputStream(
             new FileInputStream(f))); 
-            // Read in the whole array of DotModels
             dShapeArray = (DShapeModel[]) xmlIn.readObject();
             xmlIn.close();
-            //ref.clear();
+            ref.clearCanvas();
             for(DShapeModel dm:dShapeArray) {
-                ref.addShape(dm);
+            	ref.addShape(dm);
             }
-            //setDirty(false);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -47,9 +44,6 @@ public class FileMonster {
 	            DShapeModel[] dShapeModelArray = shapes.toArray(new DShapeModel[0]);
 	            xmlOut.writeObject(dShapeModelArray);
 	            xmlOut.close();
-	            // setDirty(false);
-	            // Tip: only clear dirty bit *after* all the things that
-	            // could fail/throw an exception
 	        }
 	        catch (IOException e) {
 	            e.printStackTrace();
@@ -57,10 +51,10 @@ public class FileMonster {
 	}
 	
 	public void saveImage(File f){
+		DShape temp = ref.selectedShape;
+		if(temp != null)
+			temp.model.setIsSelected(false);
 		BufferedImage image = (BufferedImage) ref.whiteBoard1.createImage(ref.whiteBoard1.getWidth(), ref.whiteBoard1.getHeight());
-        // Get Graphics pointing to the bitmap, and call paintAll()
-        // This is the RARE case where calling paint() is appropriate
-        // (normally the system calls paint()/paintComponent())
         Graphics g = image.getGraphics();
         ref.paintAll(g);
         g.dispose(); // Good but not required--
@@ -71,6 +65,8 @@ public class FileMonster {
         catch (IOException ex) {
             ex.printStackTrace();
         }
+        if(temp != null)
+        	temp.model.setIsSelected(true);
 	}
 
 }

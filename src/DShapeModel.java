@@ -9,10 +9,11 @@ import java.util.Iterator;
  * Stores x and y coordinates
  * Store width and height of shape
  */
-public class DShapeModel implements Serializable {
+public class DShapeModel implements Serializable{
 	
     private static int knobize; 
     protected static Rectangle[] knob; 
+    private boolean isSelected;
     ArrayList<ModelListener> listenerList = new ArrayList<ModelListener>();
     private int x;
     private int y;
@@ -20,17 +21,19 @@ public class DShapeModel implements Serializable {
     private int height;
     private Color color;
     private Rectangle rect;
-    
+    int ID;
 
     public DShapeModel() {
-        knobize = 9;
+    	setID(0);
+    	knobize = 9;
         knob = new Rectangle[4];
         x = (int) (Math.random() * 350);
         y = (int) (Math.random() * 350);
         width = 50;
         height = 50;
         color = Color.GRAY;
-        rect = new Rectangle(x, y, width, height);        
+        rect = new Rectangle(x, y, width, height);
+        isSelected = false;
     }
  
     public void setX(int x) {
@@ -54,6 +57,11 @@ public class DShapeModel implements Serializable {
     	color = c;
     	notifyListeners();
     }    
+    
+    public void setID(int n){
+    	ID = n;
+    }
+    
     public int getX() {
     	return x;
     }
@@ -66,10 +74,20 @@ public class DShapeModel implements Serializable {
     public int getHeight() {
     	return height;
     }
+    public int getID(){
+    	return ID;
+    }
     public Color getColor() {
     	return color;
     }
 
+    public boolean isSelected(){
+    	return isSelected;
+    }
+    
+    public void setIsSelected(boolean b){
+    	isSelected = b;
+    }
 
    public void setShapeRectangle() {
        rect = new Rectangle (x, y, width, height);
@@ -99,6 +117,13 @@ public class DShapeModel implements Serializable {
        knob[3] = new Rectangle(Integer.parseInt(bottomRight[0]) - knobize, Integer.parseInt(bottomRight[1])- knobize, knobize, knobize);
 
        return knob;
+   }
+   
+   public String toString(){
+	   String s = "";
+	   s+= "Model ID: " + ID + " Pos: (" + x + "," + y + ") Size: " + 
+	   width + " x " + height + " Color: " + color + " " + super.toString();
+	   return s;
    }
    
    public void notifyListeners(){

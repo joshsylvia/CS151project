@@ -9,7 +9,7 @@ import javax.swing.RepaintManager;
 
 public class Whiteboard extends JFrame{
 
-	
+	static final boolean DEBUG_MODE = true;
 	static ArrayList<DShape> shapes = new ArrayList<DShape>();
 	
 	public Whiteboard(String title, JPanel controls ){
@@ -37,5 +37,12 @@ public class Whiteboard extends JFrame{
 		Canvas canvas = new Canvas();
 		Whiteboard board = new Whiteboard("WhiteBoard" , canvas  );
 		board.setVisible(true);
+		
+		if(DEBUG_MODE){
+			Whiteboard board2 = new Whiteboard("WB2", new Canvas());
+			Whiteboard board3 = new Whiteboard("WB3", new Canvas());
+			board2.setVisible(true);
+			board3.setVisible(true);
+		}
 	}
 }

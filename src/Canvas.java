@@ -17,6 +17,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,8 +40,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class Canvas extends JPanel implements Serializable {
 	
-	
-	static JPanel whiteBoard1;
+	int shapeCounter = 1;
+	JPanel whiteBoard1;
 	static String topLeft;
 	static String topRight;
 	static String bottomLeft;
@@ -47,37 +49,40 @@ public class Canvas extends JPanel implements Serializable {
 	
 	static JTextField textField;
 	static String item;
-	static ArrayList<DShape> shapes = new ArrayList<DShape>();
-	static ArrayList<DShapeModel> shapeModelList = new ArrayList<DShapeModel>();
+	ArrayList<DShape> shapes = new ArrayList<DShape>();
+	ArrayList<DShapeModel> shapeModelList = new ArrayList<DShapeModel>();
 	String column_names[]= {"X","Y","Width","Height"};
 	DefaultTableModel table_model = new DefaultTableModel(column_names ,0);
 	JTable table = new JTable(table_model);
 	JButton RectButton, OvalButton , LineButton , TextButton, setColor ;
 	JLabel text = new JLabel("Add ");
+	JButton moveFront;
+	JButton moveBack;
+	JButton removeShape;
 	
 	// For Save/open
-	static FileMonster fileOps;
-	static JPanel saveOpenPanel;
-	static JButton saveB, openB, saveImgB;
+	FileMonster fileOps;
+	JPanel saveOpenPanel;
+	JButton saveB, openB, saveImgB;
 		
 	// For Server
-	static ServerMonster serverOps;
-	static JPanel serverPanel;
-	static JButton server, client;
-	static JLabel statusL;
+	ServerMonster serverOps;
+	JPanel serverPanel;
+	JButton server, client;
+	JLabel statusL;
 		
 
 	Color cColor; 
-    static DShape selectedShape;
-    static int clickedX;
-    static int clickedY;
-    static int currentW = 50;
+    DShape selectedShape;
+    int clickedX;
+    int clickedY;
+    int currentW = 50;
 
-    static int diffInX;
-    static int diffInY;
+    int diffInX;
+    int diffInY;
     
     boolean isKnobClicked = false;
-    static Rectangle knobClicked;
+    Rectangle knobClicked;
     boolean differenceCalculated = false;
 	
 	private JComboBox fontComboBox  ;
@@ -129,9 +134,9 @@ public class Canvas extends JPanel implements Serializable {
 		
 		openB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                String result = JOptionPane.showInputDialog("File Name", null);
-                if (result != null) {
-                    File f = new File(result);
+                String fName = JOptionPane.showInputDialog("File Name", null);
+                if (fName != null) {
+                    File f = new File(fName);
                     fileOps.open(f);
                 }
             }
@@ -139,9 +144,9 @@ public class Canvas extends JPanel implements Serializable {
 		
 		saveB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                String result = JOptionPane.showInputDialog("File Name", null);
-                if (result != null) {
-                    File f = new File(result);
+                String fName = JOptionPane.showInputDialog("File Name", null);
+                if (fName != null) {
+                    File f = new File(fName);
                     fileOps.save(f);
                 }
             }
@@ -149,9 +154,10 @@ public class Canvas extends JPanel implements Serializable {
 		
 		saveImgB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                String result = JOptionPane.showInputDialog("File Name", null);
-                if (result != null) {
-                    File f = new File(result);
+                String fName = JOptionPane.showInputDialog("File Name", null);
+                if (fName != null) {
+                	fName += ".png";
+                    File f = new File(fName);
                     fileOps.saveImage(f);
                 }
             }
@@ -160,7 +166,34 @@ public class Canvas extends JPanel implements Serializable {
 	}
 	
 	private void setUpServer(){
+		//Container pane = new Container();
+		serverPanel = new JPanel();
+		serverPanel.setLayout(new BoxLayout(serverPanel, BoxLayout.X_AXIS));
+		JPanel serverBP = new JPanel();
+		serverBP.setLayout(new FlowLayout());
+		server = new JButton("Server Mode");
+		client = new JButton("Client Mode");
+		serverBP.add(server);
+		serverBP.add(client);
+		serverPanel.add(serverBP);
+		JPanel statusPane = new JPanel();
+		statusPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		statusL = new JLabel("");
+		statusL.setHorizontalAlignment(JLabel.RIGHT);
+		statusPane.add(statusL);
+		serverPanel.add(statusPane);
+		server.addActionListener( new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	             serverOps.becomeServer();
+	          }
+	      });
 		
+		client.addActionListener( new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	             serverOps.becomeClient();
+	          }
+	      });
+		this.add(serverPanel);
 	}
 	
 	private void setUpTable() {
@@ -191,11 +224,11 @@ public class Canvas extends JPanel implements Serializable {
 		
 		JPanel jp = new JPanel();
 		jp.setLayout(new FlowLayout());
-		JButton moveFront = new JButton("Move To Front");
+		moveFront = new JButton("Move To Front");
 		moveFront.addActionListener(moveListener);
-		JButton moveBack = new JButton("Move To Back");
+		moveBack = new JButton("Move To Back");
 		moveBack.addActionListener(moveListener);
-		JButton removeShape = new JButton("Remove Shape");
+		removeShape = new JButton("Remove Shape");
 		removeShape.addActionListener(moveListener);
 		jp.add(moveFront);
 		jp.add(moveBack);
@@ -285,27 +318,26 @@ public class Canvas extends JPanel implements Serializable {
 	@Override
 	 public void paintComponent(Graphics g) {
 	        super.paintComponent(g);
-	        for(DShape shape: shapes){
+	        shapes.clear();
+	        DShape newShape = null;
+	        for(DShapeModel shape: shapeModelList){
 	            
-	            if(shape instanceof DRect){
-	                DRect rectangle = new DRect(shape.model);
-	                
-	                rectangle.draw(g);
-	                
+	            if(shape instanceof DRectModel){
+	                newShape = new DRect(shape);  
 	            }
-	            else if(shape instanceof DOval){
-	                DOval oval = new DOval(shape.model);
-	                oval.draw(g);
+	            else if(shape instanceof DOvalModel){
+	            	newShape = new DOval(shape);
 	            }
-	            else if(shape instanceof DLine){
-	            	DLine line = new DLine(shape.model);
-	            	line.draw(g);
+	            else if(shape instanceof DLineModel){
+	            	newShape = new DLine(shape);
 	            }
-	            else if(shape instanceof DText){
-	            	DText text = new DText(shape.model);
-	            	text.draw(g);
+	            else if(shape instanceof DTextModel){
+	            	newShape = new DText(shape);
 	            }
+	            newShape.draw(g);
+	            shapes.add(newShape);
 	        }
+	        
 	    }
     class CanvasMouseHandler extends MouseAdapter {
 
@@ -314,39 +346,44 @@ public class Canvas extends JPanel implements Serializable {
             clickedY = e.getY();
                        
             DShape clicked = shapeContains(e.getPoint());
-                   
             if(selectedShape != null){
                 knobClicked = knobContains(selectedShape, e.getPoint());
                 currentW = selectedShape.model.getWidth();             
-                if(knobClicked != null)    isKnobClicked = true;
-                
+                if(knobClicked != null)
+                	isKnobClicked = true;   
             }
              
             if(clicked != null){
+            	if(selectedShape != null){
+            		selectedShape.model.setIsSelected(false);
+            		selectedShape = null;
+            	}
                 setSelectedShape(clicked);
                 repaint();
-            }
-            else {
-                DShape.isSelected = false;
-                setSelectedShape(null);
-
-            }
-            
+            } else {
+            	if(selectedShape != null){
+            		selectedShape.model.setIsSelected(false);
+                    selectedShape = null;
+                    repaint();
+            	}
+            	
+            }            
         }
 
         public void setSelectedShape(DShape clicked) {
 
             if(selectedShape != clicked){
                 if(selectedShape != null){
-                 DShape.isSelected = false;
+                	clicked.model.setIsSelected(false);
                 }
                 selectedShape = clicked;
                 if(selectedShape != null){
-                	DShape.isSelected = true;
+                	clicked.model.setIsSelected(true);
                 	cColor = selectedShape.model.getColor();
                 }
 
             }
+            
         }   
 
         public void mouseDragged(MouseEvent e) {
@@ -413,17 +450,18 @@ public class Canvas extends JPanel implements Serializable {
 			JButton button = (JButton)e.getSource();
 			//  System.out.println ( button.getText() );
 			String text = button.getText();
+			DShapeModel dsm = null;
 
 			if(text.equalsIgnoreCase("rect")){
 				// actions for drawing the rectangle here. 
-				DShapeModel  dsm = new DRectModel();
+				dsm = new DRectModel();
 				dsm.register(serverOps);
 				shapeModelList.add(dsm);
 				addShape(dsm);
 				
 			}else if (text.equalsIgnoreCase("oval")){
 				// actions for drawing the rectangle here. 
-				DShapeModel  dsm = new DOvalModel();
+				dsm = new DOvalModel();
 				dsm.register(serverOps);
 				shapeModelList.add(dsm);
 				addShape(dsm);
@@ -431,20 +469,20 @@ public class Canvas extends JPanel implements Serializable {
 
 			}else if (text.equalsIgnoreCase("line")){
 				// actions for drawing the rectangle here. 
-				DShapeModel  dsm = new DLineModel();
+				dsm = new DLineModel();
 				dsm.register(serverOps);
 				shapeModelList.add(dsm);
 				addShape(dsm);
 			    
 			}else if (text.equalsIgnoreCase("text")){
 				// actions for drawing the rectangle here. 
-				DShapeModel  dsm = new DTextModel();
+				dsm = new DTextModel();
 				dsm.register(serverOps);
 				shapeModelList.add(dsm);
 				addShape(dsm);
 			   
 			}
-
+			
 		}
 	};
 
@@ -489,23 +527,36 @@ public class Canvas extends JPanel implements Serializable {
 			if(text.equalsIgnoreCase("move to front")){
 				if (selectedShape != null ) {
 		            DShape shape = selectedShape;
+		            DShapeModel temp = shape.model;
 		            shapes.remove(selectedShape);
-		            addShape(shape);
+		            shapeModelList.remove(temp);
+		            shapes.add(shapes.size(), shape);
+		            shapeModelList.add(temp);
+		            serverOps.move("front", temp);
 				}
 				repaint();
 				
 			}else if (text.equalsIgnoreCase("move to back")){
 				if (selectedShape != null ) {				
 					DShape shape = selectedShape;
+					DShapeModel temp = shape.model;
 					shapes.remove(selectedShape);
+					shapeModelList.remove(temp);
 					shapes.add(0, shape);
+					shapeModelList.add(0, temp);
+					serverOps.move("back", temp);
 				} 
 		        repaint();
 		        
 			}else if (text.equalsIgnoreCase("remove shape")){
-				shapes.remove(selectedShape);
-				DShape.isSelected = false;
-				
+				if(selectedShape != null){
+					shapes.remove(selectedShape);
+					selectedShape.model.unRegister(serverOps);
+					serverOps.remove(selectedShape.model);
+					shapeModelList.remove(selectedShape.model);
+					selectedShape.model.setIsSelected(false);
+					selectedShape = null;
+				}
 				removeRowFromTable(); 
 				repaint();
 				// needs more work remove last one throws error.
@@ -514,17 +565,23 @@ public class Canvas extends JPanel implements Serializable {
 		}
 	};
 	
+	public void clearCanvas(){
+		shapes.clear();
+		shapeModelList.clear();
+		repaint();
+		//table_model = new DefaultTableModel(column_names ,0);
+	}
 
-	public void addShape(DShape shape) {	
-		shape.getModel().setColor(cColor);
+	public void addShape(DShape shape) {
+		if(shape.getModel().getColor().equals(Color.GRAY))
+			shape.getModel().setColor(cColor);
 		shapes.add(shape);
 		addRowToTable( shape.getModel().getX() , shape.getModel().getY(),shape.getModel().getWidth(), shape.getModel().getHeight() );
-	    
 		repaint();
-
 	}
 	
 	public void addShape(DShapeModel dsm){
+		serverOps.addShape(dsm);
 		if(dsm instanceof DRectModel){
 			DShape  ds = new DRect(dsm);
 			addShape(ds);
@@ -565,7 +622,7 @@ public class Canvas extends JPanel implements Serializable {
     }
     
     public DShape shapeContains(Point p){
-        for(int i = shapes.size() - 1; i >= 0; i--){
+    	for(int i = shapes.size() - 1; i >= 0; i--){
             DShape r = shapes.get(i);
             if(r.model.getShapeRectangle().contains(p)) {
                 getSelectedShapeCoords(i);
@@ -584,7 +641,7 @@ public class Canvas extends JPanel implements Serializable {
     }
     
     public void setNewCoordinates(int x, int y, int width, int height) {
-    	System.out.println(x);
+    	//System.out.println(x);
         topLeft = x + "," + y;
         topRight = (x + width) + "," + y;
         bottomLeft = x + "," + (y + height);
@@ -592,5 +649,23 @@ public class Canvas extends JPanel implements Serializable {
         
     }
     
-	
+    public void activateServerState(){
+    	openB.setEnabled(false);
+    }
+    
+	public void activateClientState(){
+		moveFront.setEnabled(false);
+		moveBack.setEnabled(false);
+		removeShape.setEnabled(false);
+		RectButton.setEnabled(false);
+		OvalButton.setEnabled(false);
+		LineButton.setEnabled(false);
+		TextButton.setEnabled(false);
+		setColor.setEnabled(false);
+		openB.setEnabled(false);
+		MouseListener[] wBML = whiteBoard1.getMouseListeners();
+		whiteBoard1.removeMouseListener(wBML[0]);
+		MouseMotionListener[] wBMML = whiteBoard1.getMouseMotionListeners();
+		whiteBoard1.removeMouseMotionListener(wBMML[0]);
+	}
 }
