@@ -162,6 +162,7 @@ public class ServerMonster implements ModelListener{
 	            ServerSocket serverSocket = new ServerSocket(port);
 	            ref.statusL.setText("In Server Mode");
 	            inServerMode = true;
+	            ref.activateServerState();
 	            tagCurrentShapes();
 	            while (true) {
 	                Socket toClient = null;
@@ -197,6 +198,7 @@ public class ServerMonster implements ModelListener{
                 ref.statusL.setText("In Client Mode");
                 inClientMode = true;
                 ref.activateClientState();
+                ref.clearCanvas();
                 // we could do this if we wanted to write to server in addition
                 // to reading
                 // out = new ObjectOutputStream(toServer.getOutputStream());

@@ -558,9 +558,16 @@ public class Canvas extends JPanel implements Serializable {
 		}
 	};
 	
+	public void clearCanvas(){
+		shapes.clear();
+		shapeModelList.clear();
+		repaint();
+		//table_model = new DefaultTableModel(column_names ,0);
+	}
 
-	public void addShape(DShape shape) {	
-		shape.getModel().setColor(cColor);
+	public void addShape(DShape shape) {
+		if(shape.getModel().getColor().equals(Color.GRAY))
+			shape.getModel().setColor(cColor);
 		shapes.add(shape);
 		addRowToTable( shape.getModel().getX() , shape.getModel().getY(),shape.getModel().getWidth(), shape.getModel().getHeight() );
 	    
@@ -570,6 +577,7 @@ public class Canvas extends JPanel implements Serializable {
 	
 	public void addShape(DShapeModel dsm){
 		serverOps.addShape(dsm);
+		shapeModelList.add(dsm);
 		if(dsm instanceof DRectModel){
 			DShape  ds = new DRect(dsm);
 			addShape(ds);
@@ -635,6 +643,10 @@ public class Canvas extends JPanel implements Serializable {
         bottomLeft = x + "," + (y + height);
         bottomRight = (x + width) + "," + (y + height);
         
+    }
+    
+    public void activateServerState(){
+    	openB.setEnabled(false);
     }
     
 	public void activateClientState(){
