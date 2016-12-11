@@ -156,6 +156,7 @@ public class Canvas extends JPanel implements Serializable {
             public void actionPerformed(ActionEvent ae) {
                 String fName = JOptionPane.showInputDialog("File Name", null);
                 if (fName != null) {
+                	fName += ".png";
                     File f = new File(fName);
                     fileOps.saveImage(f);
                 }
