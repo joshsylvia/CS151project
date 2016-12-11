@@ -52,21 +52,21 @@ public class FileMonster {
 	
 	public void saveImage(File f){
 		DShape temp = ref.selectedShape;
-		if(temp != null){
+		if(temp != null)
 			temp.isSelected = false;
-			BufferedImage image = (BufferedImage) ref.whiteBoard1.createImage(ref.whiteBoard1.getWidth(), ref.whiteBoard1.getHeight());
-	        Graphics g = image.getGraphics();
-	        ref.paintAll(g);
-	        g.dispose(); // Good but not required--
-	        // dispose() Graphics you create yourself when done with them.
-	        try {
-	            javax.imageio.ImageIO.write(image, "PNG", f);
-	        }
-	        catch (IOException ex) {
-	            ex.printStackTrace();
-	        }
-	        temp.isSelected = true;
-		}
+		BufferedImage image = (BufferedImage) ref.whiteBoard1.createImage(ref.whiteBoard1.getWidth(), ref.whiteBoard1.getHeight());
+        Graphics g = image.getGraphics();
+        ref.paintAll(g);
+        g.dispose(); // Good but not required--
+        // dispose() Graphics you create yourself when done with them.
+        try {
+            javax.imageio.ImageIO.write(image, "PNG", f);
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        if(temp != null)
+        	temp.isSelected = true;
 	}
 
 }
