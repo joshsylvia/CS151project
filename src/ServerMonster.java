@@ -258,9 +258,11 @@ public class ServerMonster implements ModelListener{
             		int index = getModelIndex(model);
             		if(index >= 0){
             			if(index != (shapeList.size()-1)){
-            				DShapeModel temp = shapeList.get(index+1);
-            				shapeList.set(index+1, model);
-            				shapeList.set(index, temp);
+            				DShapeModel temp = shapeList.get(index);
+            				//shapeList.set(index+1, model);
+            				//shapeList.set(index, temp);
+            				shapeList.remove(temp);
+            				shapeList.add(temp);
             				ref.repaint();
             			}
             		}
@@ -268,9 +270,9 @@ public class ServerMonster implements ModelListener{
             	} else if (command.equals("back")){
             		int index = getModelIndex(model);
             		if(index > 0){
-            			DShapeModel temp = shapeList.get(index-1);
-            			shapeList.set(index-1, model);
-            			shapeList.set(index, temp);
+            			DShapeModel temp = shapeList.get(index);
+            			shapeList.remove(temp);
+            			shapeList.add(0, temp);
             			ref.repaint();
             			
             		}

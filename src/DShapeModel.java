@@ -87,6 +87,7 @@ public class DShapeModel implements Serializable{
     
     public void setIsSelected(boolean b){
     	isSelected = b;
+    	notifyListeners();
     }
 
    public void setShapeRectangle() {
