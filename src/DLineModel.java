@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 public class DLineModel extends DShapeModel {
 
     public DLineModel() {
-
+    	
     }
     
     

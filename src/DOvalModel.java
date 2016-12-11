@@ -2,7 +2,7 @@ import java.awt.*;
 
 public class DOvalModel extends DShapeModel {
     public DOvalModel() {
-
+    	
     }
     
     public static void showKnob(Graphics g) {

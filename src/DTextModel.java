@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 public class DTextModel extends DShapeModel {
 
     public DTextModel() {
-
+    	
     }
    
     public static void showKnob(Graphics g) {
