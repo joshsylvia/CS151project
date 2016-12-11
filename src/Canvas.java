@@ -327,7 +327,7 @@ public class Canvas extends JPanel implements Serializable {
                 repaint();
             }
             else {
-                selectedShape.isSelected = false;
+                DShape.isSelected = false;
                 setSelectedShape(null);
 
             }
@@ -338,11 +338,11 @@ public class Canvas extends JPanel implements Serializable {
 
             if(selectedShape != clicked){
                 if(selectedShape != null){
-                 selectedShape.isSelected = false;
+                 DShape.isSelected = false;
                 }
                 selectedShape = clicked;
                 if(selectedShape != null){
-                	selectedShape.isSelected = true;
+                	DShape.isSelected = true;
                 	cColor = selectedShape.model.getColor();
                 }
 
@@ -361,24 +361,22 @@ public class Canvas extends JPanel implements Serializable {
                 int changeY = e.getY() - currentY;
                 
                 if(isKnobClicked){
-                    if(knobClicked.equals(selectedShape.model.knob[0])){
+                    if(knobClicked.equals(DShapeModel.knob[0])){
                         knobClicked = new Rectangle(e.getX(), e.getY(), 9, 9);
                         resizingUpdate(e.getX(), e.getY(), currentWidth - changeX, currentHeight - changeY);
                     }
-                    else if(knobClicked.equals(selectedShape.model.knob[1])){
+                    else if(knobClicked.equals(DShapeModel.knob[1])){
                         knobClicked = new Rectangle(e.getX() - 9, e.getY(), 9, 9);
                         resizingUpdate(currentX, e.getY(), changeX, currentHeight - changeY);                        
                     }
-                    else if(knobClicked.equals(selectedShape.model.knob[2])){
+                    else if(knobClicked.equals(DShapeModel.knob[2])){
                         knobClicked = new Rectangle(e.getX(), e.getY() - 9, 9, 9);
                         resizingUpdate(e.getX(), currentY, currentWidth - changeX, changeY);
                     }else{
                         knobClicked = new Rectangle(e.getX() - 9, e.getY() - 9, 9, 9);
                         resizingUpdate(currentX, currentY, changeX, changeY);
                     }
-                }
-                         
-                else {
+                }  else {
                     if (!differenceCalculated) {
                         diffInX = clickedX - selectedShape.model.getX();
                         diffInY = clickedY - selectedShape.model.getY();
@@ -391,7 +389,7 @@ public class Canvas extends JPanel implements Serializable {
                     selectedShape.model.setX(newX);
                     selectedShape.model.setY(newY);
                     selectedShape.model.setShapeRectangle();
-
+                    resizingUpdate(newX, newY, currentWidth, currentHeight);
                     repaint();
 
                 }
@@ -506,7 +504,9 @@ public class Canvas extends JPanel implements Serializable {
 		        
 			}else if (text.equalsIgnoreCase("remove shape")){
 				shapes.remove(selectedShape);
-				removeRowFromTable();
+				DShape.isSelected = false;
+				
+				removeRowFromTable(); 
 				repaint();
 				// needs more work remove last one throws error.
 			}
@@ -555,8 +555,8 @@ public class Canvas extends JPanel implements Serializable {
     }
     
     public Rectangle knobContains(DShape shape, Point p){
-        for(int i = 0; i < shape.model.knob.length ; i++){
-            Rectangle r = shape.model.knob[i];
+        for(int i = 0; i < DShapeModel.knob.length ; i++){
+            Rectangle r = DShapeModel.knob[i];
             if(r.contains(p)){
                 return r;
             }
