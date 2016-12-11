@@ -16,12 +16,13 @@ public class Whiteboard extends JFrame{
 
 		super( title );       
 		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-	    setSize( 430, 800 );
-	    setLayout( new BorderLayout() ); 
+	    setSize( 830,500 );
+	    //setLayout( new BorderLayout() ); 
 	   // setContentPane(getContentPane());
 	    
 		//whiteBoard.setBackground(Color.lightGray);
-	    add(controls, BorderLayout.WEST);
+	    //add(controls, BorderLayout.WEST);
+	    add(controls);
 	 //   add(canvas, BorderLayout.EAST);
 	    
 	}

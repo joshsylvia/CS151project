@@ -27,6 +27,7 @@ import java.util.prefs.BackingStoreException;
 
 import javax.sound.sampled.Line;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
@@ -41,6 +42,7 @@ import javax.swing.table.DefaultTableModel;
 public class Canvas extends JPanel implements Serializable {
 	
 	int shapeCounter = 1;
+	JPanel controlPanel;
 	JPanel whiteBoard1;
 	static String topLeft;
 	static String topRight;
@@ -100,19 +102,25 @@ public class Canvas extends JPanel implements Serializable {
 	
 	
 	public Canvas (){
+		controlPanel = new JPanel();
+		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+		controlPanel.setPreferredSize(new Dimension(400,400));
+		this.setLayout(new BorderLayout());
 		fileOps = new FileMonster(this);
 		serverOps = new ServerMonster(this);
 		
 		cColor = Color.LIGHT_GRAY;
 		whiteBoard1 = new whiteBoard1();
-		setSize(new Dimension(800,400));
-		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		//setSize(new Dimension(800,400));
+		this.setPreferredSize(new Dimension(400, 810));
+		
+		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.PAGE_AXIS));
 		whiteBoard1.setPreferredSize(new Dimension(400, 400));
 		whiteBoard1.setBackground(Color.WHITE);
-		
-		add(whiteBoard1);
+		add(controlPanel, BorderLayout.WEST);
+		add(whiteBoard1, BorderLayout.CENTER);
 		addShapeButtons();
-		add(setColor);
+		controlPanel.add(setColor);
 		
 		setUpFontChooser();
 		setUpMoveButtons();
@@ -162,7 +170,7 @@ public class Canvas extends JPanel implements Serializable {
                 }
             }
         });
-		this.add(saveOpenPanel);
+		controlPanel.add(saveOpenPanel);
 	}
 	
 	private void setUpServer(){
@@ -193,7 +201,7 @@ public class Canvas extends JPanel implements Serializable {
 	             serverOps.becomeClient();
 	          }
 	      });
-		this.add(serverPanel);
+		controlPanel.add(serverPanel);
 	}
 	
 	private void setUpTable() {
@@ -202,7 +210,7 @@ public class Canvas extends JPanel implements Serializable {
 		scrollPane.setPreferredSize(new Dimension(300, 200));
         scrollPane.createHorizontalScrollBar();
 		table.setGridColor(Color.blue);
-		add(scrollPane);
+		controlPanel.add(scrollPane);
 		
 	}
 
@@ -234,13 +242,14 @@ public class Canvas extends JPanel implements Serializable {
 		jp.add(moveBack);
 		jp.add(removeShape);
 	
-		this.add(jp);
+		controlPanel.add(jp);
 	}
 
 	private void setUpFontChooser() {
 
 		JPanel jp = new JPanel();
 		jp.setLayout(new FlowLayout());
+		jp.setPreferredSize(new Dimension(400, 50));
 		GraphicsEnvironment gEnv = GraphicsEnvironment
 				.getLocalGraphicsEnvironment();
 		String envfonts[] = gEnv.getAvailableFontFamilyNames();
@@ -258,7 +267,7 @@ public class Canvas extends JPanel implements Serializable {
 		jp.add(textField); 
 		jp.add(fontComboBox);
 		jp.add(fontTesterLabel);
-		this.add(jp);
+		controlPanel.add(jp);
 	
 	}
 
@@ -291,8 +300,8 @@ public class Canvas extends JPanel implements Serializable {
 		container.add(TextButton);
 		container.add(setColor);
 		
-		this.add(container );
-		add(setColor);
+		controlPanel.add(container );
+		controlPanel.add(setColor);
 
 	}
 	
