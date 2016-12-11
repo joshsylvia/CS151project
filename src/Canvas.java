@@ -104,7 +104,7 @@ public class Canvas extends JPanel implements Serializable {
 	public Canvas (){
 		controlPanel = new JPanel();
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-		controlPanel.setPreferredSize(new Dimension(400,400));
+		controlPanel.setPreferredSize(new Dimension(450,450));
 		this.setLayout(new BorderLayout());
 		fileOps = new FileMonster(this);
 		serverOps = new ServerMonster(this);
