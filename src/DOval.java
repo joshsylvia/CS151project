@@ -10,7 +10,7 @@ public class DOval extends DShape {
     public void draw(Graphics g) {
         g.setColor(model.getColor());
         g.fillOval(model.getX(), model.getY(), model.getWidth(), model.getHeight());
-        DOvalModel.showKnob(g);
+        ((DOvalModel)model).showKnob(g);
 
     }
 }

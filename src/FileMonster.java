@@ -53,7 +53,7 @@ public class FileMonster {
 	public void saveImage(File f){
 		DShape temp = ref.selectedShape;
 		if(temp != null)
-			temp.isSelected = false;
+			temp.model.setIsSelected(false);
 		BufferedImage image = (BufferedImage) ref.whiteBoard1.createImage(ref.whiteBoard1.getWidth(), ref.whiteBoard1.getHeight());
         Graphics g = image.getGraphics();
         ref.paintAll(g);
@@ -66,7 +66,7 @@ public class FileMonster {
             ex.printStackTrace();
         }
         if(temp != null)
-        	temp.isSelected = true;
+        	temp.model.setIsSelected(true);
 	}
 
 }

@@ -13,6 +13,7 @@ public class DShapeModel implements Serializable{
 	
     private static int knobize; 
     protected static Rectangle[] knob; 
+    private boolean isSelected;
     ArrayList<ModelListener> listenerList = new ArrayList<ModelListener>();
     private int x;
     private int y;
@@ -31,7 +32,8 @@ public class DShapeModel implements Serializable{
         width = 50;
         height = 50;
         color = Color.GRAY;
-        rect = new Rectangle(x, y, width, height);        
+        rect = new Rectangle(x, y, width, height);
+        isSelected = false;
     }
  
     public void setX(int x) {
@@ -79,6 +81,13 @@ public class DShapeModel implements Serializable{
     	return color;
     }
 
+    public boolean isSelected(){
+    	return isSelected;
+    }
+    
+    public void setIsSelected(boolean b){
+    	isSelected = b;
+    }
 
    public void setShapeRectangle() {
        rect = new Rectangle (x, y, width, height);

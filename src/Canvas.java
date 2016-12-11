@@ -349,35 +349,41 @@ public class Canvas extends JPanel implements Serializable {
             if(selectedShape != null){
                 knobClicked = knobContains(selectedShape, e.getPoint());
                 currentW = selectedShape.model.getWidth();             
-                if(knobClicked != null)    isKnobClicked = true;
-                
+                if(knobClicked != null)
+                	isKnobClicked = true;   
             }
              
             if(clicked != null){
+            	if(selectedShape != null){
+            		selectedShape.model.setIsSelected(false);
+            		selectedShape = null;
+            	}
                 setSelectedShape(clicked);
                 repaint();
-            }
-            else {
-                DShape.isSelected = false;
-                setSelectedShape(null);
-
-            }
-            
+            } else {
+            	if(selectedShape != null){
+            		selectedShape.model.setIsSelected(false);
+                    selectedShape = null;
+                    repaint();
+            	}
+            	
+            }            
         }
 
         public void setSelectedShape(DShape clicked) {
 
             if(selectedShape != clicked){
                 if(selectedShape != null){
-                 DShape.isSelected = false;
+                	clicked.model.setIsSelected(false);
                 }
                 selectedShape = clicked;
                 if(selectedShape != null){
-                	DShape.isSelected = true;
+                	clicked.model.setIsSelected(true);
                 	cColor = selectedShape.model.getColor();
                 }
 
             }
+            
         }   
 
         public void mouseDragged(MouseEvent e) {
@@ -524,7 +530,7 @@ public class Canvas extends JPanel implements Serializable {
 		            DShapeModel temp = shape.model;
 		            shapes.remove(selectedShape);
 		            shapeModelList.remove(temp);
-		            addShape(shape);
+		            shapes.add(shapes.size(), shape);
 		            shapeModelList.add(temp);
 		            serverOps.move("front", temp);
 				}
@@ -548,7 +554,7 @@ public class Canvas extends JPanel implements Serializable {
 					selectedShape.model.unRegister(serverOps);
 					serverOps.remove(selectedShape.model);
 					shapeModelList.remove(selectedShape.model);
-					DShape.isSelected = false;
+					selectedShape.model.setIsSelected(false);
 					selectedShape = null;
 				}
 				removeRowFromTable(); 
@@ -571,14 +577,11 @@ public class Canvas extends JPanel implements Serializable {
 			shape.getModel().setColor(cColor);
 		shapes.add(shape);
 		addRowToTable( shape.getModel().getX() , shape.getModel().getY(),shape.getModel().getWidth(), shape.getModel().getHeight() );
-	    
 		repaint();
-
 	}
 	
 	public void addShape(DShapeModel dsm){
 		serverOps.addShape(dsm);
-		shapeModelList.add(dsm);
 		if(dsm instanceof DRectModel){
 			DShape  ds = new DRect(dsm);
 			addShape(ds);
@@ -638,7 +641,7 @@ public class Canvas extends JPanel implements Serializable {
     }
     
     public void setNewCoordinates(int x, int y, int width, int height) {
-    	System.out.println(x);
+    	//System.out.println(x);
         topLeft = x + "," + y;
         topRight = (x + width) + "," + y;
         bottomLeft = x + "," + (y + height);

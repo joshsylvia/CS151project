@@ -8,8 +8,8 @@ public class DLineModel extends DShapeModel {
     	
     }
    
-    public static void showKnob(Graphics g) {
-        if(DShape.isSelected) {
+    public void showKnob(Graphics g) {
+        if(isSelected()) {
             Rectangle[] knob = getknob();
             for (int i = 0; i < knob.length; i++) {
                 g.setColor(Color.BLACK);
