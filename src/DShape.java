@@ -20,10 +20,6 @@ public class DShape implements Serializable, ModelListener {
 
 	@Override
 	public void modelChanged(DShapeModel model) {
-		// need a method here to prompt the shape 
-		// to repaint itself on the canvas and it
-		// will do so whenever a change to its model
-		// is detected
 		
 	}
 	
