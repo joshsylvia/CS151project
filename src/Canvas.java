@@ -104,30 +104,22 @@ public class Canvas extends JPanel implements Serializable {
 	public Canvas (){
 		controlPanel = new JPanel();
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-		controlPanel.setPreferredSize(new Dimension(450,450));
+		controlPanel.setPreferredSize(new Dimension(400,400));
 		this.setLayout(new BorderLayout());
 		fileOps = new FileMonster(this);
 		serverOps = new ServerMonster(this);
-		
 		cColor = Color.LIGHT_GRAY;
-		whiteBoard1 = new whiteBoard1();
-		//setSize(new Dimension(800,400));
-		this.setPreferredSize(new Dimension(400, 810));
+		whiteBoard1 = new WhiteBoard1();
 		
-		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.PAGE_AXIS));
-		whiteBoard1.setPreferredSize(new Dimension(400, 400));
-		whiteBoard1.setBackground(Color.WHITE);
-		add(controlPanel, BorderLayout.WEST);
-		add(whiteBoard1, BorderLayout.CENTER);
 		addShapeButtons();
 		controlPanel.add(setColor);
-		
 		setUpFontChooser();
 		setUpMoveButtons();
 		setUpTable();		
 		setUpSaveOpen();
 		setUpServer();
-
+		add(controlPanel, BorderLayout.WEST);
+		add(whiteBoard1, BorderLayout.CENTER);
 	}
 	
 	private void setUpSaveOpen(){
@@ -305,10 +297,10 @@ public class Canvas extends JPanel implements Serializable {
 
 	}
 	
-	class whiteBoard1 extends JPanel  {
+	class WhiteBoard1 extends JPanel  {
 		int width = 400;
 		int height = 400;
-	whiteBoard1() {
+	WhiteBoard1() {
 		setPreferredSize(new Dimension(400,400));
 		setBackground(Color.WHITE);
 		CanvasMouseHandler handler = new CanvasMouseHandler();
@@ -465,14 +457,14 @@ public class Canvas extends JPanel implements Serializable {
 				// actions for drawing the rectangle here. 
 				dsm = new DRectModel();
 				dsm.register(serverOps);
-				shapeModelList.add(dsm);
+				//shapeModelList.add(dsm);
 				addShape(dsm);
 				
 			}else if (text.equalsIgnoreCase("oval")){
 				// actions for drawing the rectangle here. 
 				dsm = new DOvalModel();
 				dsm.register(serverOps);
-				shapeModelList.add(dsm);
+				//shapeModelList.add(dsm);
 				addShape(dsm);
 			    
 
@@ -480,14 +472,14 @@ public class Canvas extends JPanel implements Serializable {
 				// actions for drawing the rectangle here. 
 				dsm = new DLineModel();
 				dsm.register(serverOps);
-				shapeModelList.add(dsm);
+				//shapeModelList.add(dsm);
 				addShape(dsm);
 			    
 			}else if (text.equalsIgnoreCase("text")){
 				// actions for drawing the rectangle here. 
 				dsm = new DTextModel();
 				dsm.register(serverOps);
-				shapeModelList.add(dsm);
+				//shapeModelList.add(dsm);
 				addShape(dsm);
 			   
 			}
@@ -596,6 +588,7 @@ public class Canvas extends JPanel implements Serializable {
 	}
 	
 	public void addShape(DShapeModel dsm){
+		shapeModelList.add(dsm);
 		serverOps.addShape(dsm);
 		if(dsm instanceof DRectModel){
 			DShape  ds = new DRect(dsm);

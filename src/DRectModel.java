@@ -8,7 +8,7 @@ public class DRectModel extends DShapeModel {
     }
     
    public void showKnob(Graphics g) {
-        if(isSelected()) {
+        if(getIsSelected()) {
             Rectangle[] knob = getknob();
             for (int i = 0; i < knob.length; i++) {
                 g.setColor(Color.BLACK);

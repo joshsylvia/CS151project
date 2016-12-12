@@ -33,7 +33,7 @@ public class DShapeModel implements Serializable {
         height = 50;
         color = Color.GRAY;
         rect = new Rectangle(x, y, width, height);
-        isSelected = false;
+        setIsSelected(false);
     }
 
     private String text;
@@ -106,7 +106,7 @@ public class DShapeModel implements Serializable {
     	return color;
     }
 
-    public boolean isSelected(){
+    public boolean getIsSelected(){
     	return isSelected;
     }
     
@@ -154,7 +154,8 @@ public class DShapeModel implements Serializable {
    public String toString(){
 	   String s = "";
 	   s+= "Model ID: " + ID + " Pos: (" + x + "," + y + ") Size: " + 
-	   width + " x " + height + " Color: " + color + " " + super.toString();
+	   width + " x " + height + " Color: " + color + " " + "IsSelected: " +
+			   isSelected + " " + super.toString();
 	   return s;
    }
    

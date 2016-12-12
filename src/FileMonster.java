@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.JPanel;
+
 public class FileMonster {
 	static Canvas ref;
 	
@@ -36,6 +38,9 @@ public class FileMonster {
 	}
 	
 	public void save(File f){
+		DShape temp = ref.selectedShape;
+		if(temp != null)
+			temp.model.setIsSelected(false);
 		try {
 	        XMLEncoder xmlOut = new XMLEncoder(
 	            new BufferedOutputStream(
@@ -48,15 +53,18 @@ public class FileMonster {
 	        catch (IOException e) {
 	            e.printStackTrace();
 	        }
+		if(temp != null)
+        	temp.model.setIsSelected(true);
 	}
 	
 	public void saveImage(File f){
 		DShape temp = ref.selectedShape;
 		if(temp != null)
 			temp.model.setIsSelected(false);
-		BufferedImage image = (BufferedImage) ref.whiteBoard1.createImage(ref.whiteBoard1.getWidth(), ref.whiteBoard1.getHeight());
-        Graphics g = image.getGraphics();
-        ref.paintAll(g);
+		JPanel board = ref.whiteBoard1;
+		BufferedImage image = (BufferedImage) board.createImage(ref.whiteBoard1.getWidth(), ref.whiteBoard1.getHeight());
+		Graphics g = image.getGraphics();
+        board.print(g);
         g.dispose(); // Good but not required--
         // dispose() Graphics you create yourself when done with them.
         try {

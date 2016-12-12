@@ -9,7 +9,7 @@ public class DLineModel extends DShapeModel {
     }
    
     public void showKnob(Graphics g) {
-        if(isSelected()) {
+        if(getIsSelected()) {
             Rectangle[] knob = getknob();
             g.setColor(Color.BLACK);
             g.fillRect(knob[0].x, knob[0].y, knob[0].width, knob[0].height);
