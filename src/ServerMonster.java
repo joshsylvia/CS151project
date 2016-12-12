@@ -24,8 +24,8 @@ public class ServerMonster implements ModelListener{
 	private Canvas ref;
 	private ClientHandler clientHandler;
     private ServerAccepter serverAccepter;
-    private boolean inServerMode = false;
-    private boolean inClientMode = false;
+    boolean inServerMode = false;
+    boolean inClientMode = false;
  // List of object streams to which we send data
     private java.util.List<ObjectOutputStream> outputs =
         new ArrayList<ObjectOutputStream>();
@@ -98,8 +98,10 @@ public class ServerMonster implements ModelListener{
 	public void updateNewClient(ObjectOutputStream oos){
 		// send oos a command to clear its screen
 		// cycle through shape list and send add command for all shapes
-		if(DEBUG_MODE)
-			System.out.println("updating new client");
+		if(DEBUG_MODE){
+			System.out.println("updating new client, starting shapeList state:");
+			printShapeList();
+		}
 		Iterator iter = shapeList.iterator();
 		while(iter.hasNext()){
 			DShapeModel m = (DShapeModel)iter.next();
@@ -196,27 +198,18 @@ public class ServerMonster implements ModelListener{
             this.name = name;
             this.port = port;
         }
-    // Connect to the server, loop getting messages
         public void run() {
             try {
-                // make connection to the server name/port
                 Socket toServer = new Socket(name, port);
-                // get input stream to read from server and wrap in object input stream
                 ObjectInputStream in = new ObjectInputStream(toServer.getInputStream());
                 System.out.println("client: connected!");
                 ref.statusL.setText("In Client Mode");
                 inClientMode = true;
                 ref.activateClientState();
                 ref.clearCanvas();
-                // we could do this if we wanted to write to server in addition
-                // to reading
-                // out = new ObjectOutputStream(toServer.getOutputStream());
                 while (true) {
-                    // Get the xml string, decode to a Message object.
-                    // Blocks in readObject(), waiting for server to send something.
                     String command = (String) in.readObject();
                     String xmlString = (String) in.readObject();
-                    //System.out.println(xmlString);
                     DShapeModel[] dShapeArray = null;
                     XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(xmlString.getBytes()));
                     dShapeArray = (DShapeModel[]) decoder.readObject();
@@ -229,35 +222,35 @@ public class ServerMonster implements ModelListener{
                     invokeToGUI(command, model);
                 }
             }
-            catch (Exception ex) { // IOException and ClassNotFoundException
+            catch (Exception ex) {
                ex.printStackTrace();
                ref.statusL.setText("");
             }
-            // Could null out client ptr.
-            // Note that exception breaks out of the while loop,
-            // thus ending the thread.
        }
    }
 
-	//Adds an object stream to the list of outputs
-	// (this and sendToOutputs() are synchronzied to avoid conflicts)
 	public synchronized void addOutput(ObjectOutputStream out) {
 	    outputs.add(out);
 	}
 	
 	public void invokeToGUI(String command, DShapeModel model) {
-		//System.out.println("GUIInvoked: " + command + " " + model.toString());
-        SwingUtilities.invokeLater( new Runnable() {
+		SwingUtilities.invokeLater( new Runnable() {
             public void run() {
             	if(command.equals("add")){
-            		ref.shapeModelList.add(model);
+            		//ref.shapeModelList.add(model);
             		ref.addShape(model);
+            		if(DEBUG_MODE){
+            			System.out.println("In add - ShapeList state: ");
+            			printShapeList();
+            		}
             	} else if (command.equals("remove")){
-            		System.out.println("In remove");
             		int index = getModelIndex(model);
             		shapeList.remove(index);
             		ref.repaint();
-            		
+            		if(DEBUG_MODE){
+            			System.out.println("In remove - ShapeList state: ");
+            			printShapeList();
+            		}
             	} else if (command.equals("change")){
             		DShapeModel myModel = findMyModel(model);
             		if(myModel != null){
@@ -265,7 +258,10 @@ public class ServerMonster implements ModelListener{
             		} else {
             			System.out.println("No matching model found in client");
             		}
-            		
+            		if(DEBUG_MODE){
+            			System.out.println("In change - ShapeList state: ");
+            			printShapeList();
+            		}
             	} else if (command.equals("front")){
             		int index = getModelIndex(model);
             		if(index >= 0){
@@ -278,7 +274,10 @@ public class ServerMonster implements ModelListener{
             				ref.repaint();
             			}
             		}
-            		
+            		if(DEBUG_MODE){
+            			System.out.println("In front - ShapeList state: ");
+            			printShapeList();
+            		}
             	} else if (command.equals("back")){
             		int index = getModelIndex(model);
             		if(index > 0){
@@ -288,11 +287,13 @@ public class ServerMonster implements ModelListener{
             			ref.repaint();
             			
             		}
+            		if(DEBUG_MODE){
+            			System.out.println("In back - ShapeList state: ");
+            			printShapeList();
+            		}
             	} else {
             		System.out.println("Error: command not recognized");
             	}
-                //ref.statusL.setText("Client receive");
-                //sendLocal(temp);
             }
         });
     }
@@ -325,6 +326,9 @@ public class ServerMonster implements ModelListener{
 		myModel.setWidth(newModel.getWidth());
 		myModel.setColor(newModel.getColor());
 		myModel.setID(newModel.getID());
+		myModel.setIsSelected(newModel.getIsSelected());
+		myModel.setFontName(newModel.getFontName());
+		myModel.setText(newModel.getText());
 		ref.repaint();
 	}
 	
@@ -333,6 +337,13 @@ public class ServerMonster implements ModelListener{
 		while(iter.hasNext()){
 			DShapeModel dsm = (DShapeModel)iter.next();
 			dsm.setID(shapeCounter++);
+		}
+	}
+	
+	private void printShapeList(){
+		Iterator iter = shapeList.iterator();
+		while(iter.hasNext()){
+			System.out.println(iter.next().toString());
 		}
 	}
 	

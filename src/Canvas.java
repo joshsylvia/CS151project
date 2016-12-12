@@ -748,5 +748,6 @@ public class Canvas extends JPanel implements Serializable {
 		whiteBoard1.removeMouseListener(wBML[0]);
 		MouseMotionListener[] wBMML = whiteBoard1.getMouseMotionListeners();
 		whiteBoard1.removeMouseMotionListener(wBMML[0]);
+		clearCanvas();
 	}
 }

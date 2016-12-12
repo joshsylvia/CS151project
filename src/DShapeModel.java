@@ -11,16 +11,16 @@ import java.util.Iterator;
  */
 public class DShapeModel {
 	
-    private static int knobize; 
+    int knobize; 
     protected static Rectangle[] knob; 
-    private boolean isSelected;
+    boolean isSelected;
     ArrayList<ModelListener> listenerList = new ArrayList<ModelListener>();
-    private int x;
-    private int y;
-    private int width;
-    private int height;
-    private Color color;
-    private Rectangle rect;
+    int x;
+    int y;
+    int width;
+    int height;
+    Color color;
+    Rectangle rect;
     int ID;
 
     public DShapeModel() {
@@ -37,13 +37,14 @@ public class DShapeModel {
         setIsSelected(false);
     }
 
-    private String text;
-    private String font; 
+    String text;
+    String font; 
     
  
     
     public void setText(String t) {
     	text = t;
+    	notifyListeners();
     }
     
     public String getText() {
@@ -53,6 +54,7 @@ public class DShapeModel {
     
     public void setFontName(String f) {
         font = f;
+        notifyListeners();
     }
     
     public String getFontName() {
