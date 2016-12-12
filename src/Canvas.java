@@ -50,7 +50,7 @@ public class Canvas extends JPanel implements Serializable {
 	static String bottomRight;
 	
 	static JTextField textField;
-	static String item;
+	private String item;
 	ArrayList<DShape> shapes = new ArrayList<DShape>();
 	ArrayList<DShapeModel> shapeModelList = new ArrayList<DShapeModel>();
 	String column_names[]= {"X","Y","Width","Height"};
@@ -520,9 +520,10 @@ public class Canvas extends JPanel implements Serializable {
 		public void actionPerformed(ActionEvent e) {
 			JComboBox source = (JComboBox) e.getSource();
 		    item = (String) source.getSelectedItem();
+		    selectedShape.model.setFont(item);
 		    selectedFont = new Font(item, Font.PLAIN, 12);
 		    fontTesterLabel.setFont(selectedFont);
-			
+			repaint();
 		}
 	};
 	
@@ -584,8 +585,11 @@ public class Canvas extends JPanel implements Serializable {
 	public void addShape(DShape shape) {
 		if(shape.getModel().getColor().equals(Color.GRAY))
 			shape.getModel().setColor(cColor);
-		if (shape.getModel() instanceof DTextModel)
-			shape.getModel().setText((String)textField.getText());
+		if (shape.getModel() instanceof DTextModel) {
+			String tf = textField.getText().equals("")?"Hello":textField.getText();
+			shape.getModel().setText(tf);
+			shape.getModel().setFont(item);
+		}
 		shapes.add(shape);
 		addRowToTable( shape.getModel().getX() , shape.getModel().getY(),shape.getModel().getWidth(), shape.getModel().getHeight() );
 		repaint();

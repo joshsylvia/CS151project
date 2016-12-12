@@ -9,7 +9,7 @@ import java.util.Iterator;
  * Stores x and y coordinates
  * Store width and height of shape
  */
-public class DShapeModel {
+public class DShapeModel implements Serializable {
 	
     private static int knobize; 
     protected static Rectangle[] knob; 
@@ -32,7 +32,6 @@ public class DShapeModel {
         width = 50;
         height = 50;
         color = Color.GRAY;
-        text = "Hello";
         rect = new Rectangle(x, y, width, height);
         isSelected = false;
     }
@@ -51,11 +50,11 @@ public class DShapeModel {
     }
     
     
-    public void setFontName(String f) {
+    public void setFont(String f) {
         font = f;
     }
     
-    public String getFontName() {
+    public String getFont() {
         return font;
     }
     
