@@ -61,7 +61,7 @@ public class Canvas extends JPanel implements Serializable {
 	JButton moveFront;
 	JButton moveBack;
 	JButton removeShape;
-	
+    int selectedRow = -1;
 	// For Save/open
 	FileMonster fileOps;
 	JPanel saveOpenPanel;
@@ -215,9 +215,13 @@ public class Canvas extends JPanel implements Serializable {
 	}
 	
 	
-	public void removeRowFromTable(){
+	public void removeRowFromTable( int index){
 		
-		((DefaultTableModel)table.getModel()).removeRow(1);
+		
+		((DefaultTableModel)table.getModel()).removeRow(index);
+		//selectedRow = -1 ;
+		System.out.println("row is : " +index);
+		
 	}
 	
 	private void setUpMoveButtons() {
@@ -342,12 +346,20 @@ public class Canvas extends JPanel implements Serializable {
 	    }
     class CanvasMouseHandler extends MouseAdapter {
 
-        public void mousePressed(MouseEvent e){
+      
+
+    	// selectRowFrmTable( clicked.model.getX() , clickedY);
+
+
+		public void mousePressed(MouseEvent e){
             clickedX = e.getX();
             clickedY = e.getY();
                        
             DShape clicked = shapeContains(e.getPoint());
+            selectRowFrmTable( clicked.model.getX() , clickedY);
+            
             if(selectedShape != null){
+            	selectRowFrmTable( selectedShape.model.getX() , clickedY);
                 knobClicked = knobContains(selectedShape, e.getPoint());
                 currentW = selectedShape.model.getWidth();             
                 if(knobClicked != null)
@@ -355,7 +367,9 @@ public class Canvas extends JPanel implements Serializable {
             }
              
             if(clicked != null){
+            	
             	if(selectedShape != null){
+            		selectRowFrmTable( selectedShape.model.getX() , clickedY);
             		selectedShape.model.setIsSelected(false);
             		selectedShape = null;
             	}
@@ -371,6 +385,35 @@ public class Canvas extends JPanel implements Serializable {
             }            
         }
 
+		 private void updateTableForXY(int x, int y , int h ,int w ) {
+	            table.setValueAt(x, selectedRow, 0); //value, r, c
+	            table.setValueAt(y, selectedRow, 1); //value, r, c
+	            table.setValueAt(w, selectedRow, 2); //value, r, c
+	            table.setValueAt(h, selectedRow, 3); //value, r, c
+				
+			}
+		
+        private int selectRowFrmTable(int clickedX, int clickedY) {
+		
+        	for (int i = table.getRowCount() - 1; i >= 0; --i) {
+                for (int j = table.getColumnCount() - 1; j >= 0; --j) {
+                    if (table.getValueAt(i, j).equals(clickedX)      ) {
+                       System.out.println("row found");
+                       selectedRow = i ;
+                      // removeRowFromTable(selectedRow);
+//                       table.setValueAt(clickedX, i, 0); //value, r, c
+//                       table.setValueAt(clickedY, i, 1); //value, r, c
+                       return i;
+                        
+                    }
+                }
+            }
+        	
+        	
+        	
+			return -1;
+		}
+        
         public void setSelectedShape(DShape clicked) {
 
             if(selectedShape != clicked){
@@ -431,6 +474,9 @@ public class Canvas extends JPanel implements Serializable {
                     repaint();
 
                 }
+                updateTableForXY( selectedShape.getModel().getX() , selectedShape.getModel().getY(),
+                		selectedShape.getModel().getHeight(), selectedShape.getModel().getWidth() );
+          
             }
         }
    
@@ -557,8 +603,11 @@ public class Canvas extends JPanel implements Serializable {
 					shapeModelList.remove(selectedShape.model);
 					selectedShape.model.setIsSelected(false);
 					selectedShape = null;
+					if(selectedRow != -1){
+						removeRowFromTable(selectedRow); 
+					}
 				}
-				removeRowFromTable(); 
+				//removeRowFromTable(selectedRow); 
 				repaint();
 				// needs more work remove last one throws error.
 			}
