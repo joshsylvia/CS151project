@@ -43,6 +43,7 @@ public class DShapeModel implements Serializable {
     
     public void setText(String t) {
     	text = t;
+    	notifyListeners();
     }
     
     public String getText() {
@@ -52,10 +53,12 @@ public class DShapeModel implements Serializable {
     
     public void setFont(String f) {
         font = f;
+        notifyListeners();
     }
     
     public String getFont() {
         return font;
+
     }
     
     public void setX(int x) {
