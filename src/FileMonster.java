@@ -62,12 +62,9 @@ public class FileMonster {
 		if(temp != null)
 			temp.model.setIsSelected(false);
 		JPanel board = ref.whiteBoard1;
-
-		BufferedImage image = (BufferedImage) (ref.whiteBoard1).createImage(ref.whiteBoard1.getWidth(), ref.whiteBoard1.getHeight());
-		//BufferedImage image = (BufferedImage) board.createImage(ref.whiteBoard1.getWidth(), ref.whiteBoard1.getHeight());
-        Graphics g = image.getGraphics();
-        //ref.paint(g);
-        ref.paintComponents(g);
+		BufferedImage image = (BufferedImage) board.createImage(ref.whiteBoard1.getWidth(), ref.whiteBoard1.getHeight());
+		Graphics g = image.getGraphics();
+        board.print(g);
         g.dispose(); // Good but not required--
         // dispose() Graphics you create yourself when done with them.
         try {

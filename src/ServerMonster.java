@@ -19,7 +19,7 @@ import javax.swing.SwingUtilities;
 
 public class ServerMonster implements ModelListener{
 	
-	private final boolean DEBUG_MODE = true;
+	private final boolean DEBUG_MODE = false;
 	private int shapeCounter = 1;
 	private Canvas ref;
 	private ClientHandler clientHandler;

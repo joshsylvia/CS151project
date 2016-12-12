@@ -118,9 +118,8 @@ public class Canvas extends JPanel implements Serializable {
 		setUpTable();		
 		setUpSaveOpen();
 		setUpServer();
-		add(controlPanel, BorderLayout.CENTER);
-		add(whiteBoard1, BorderLayout.WEST);
-		
+		add(controlPanel, BorderLayout.WEST);
+		add(whiteBoard1, BorderLayout.CENTER);
 	}
 	
 	private void setUpSaveOpen(){
