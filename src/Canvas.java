@@ -41,7 +41,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel; 
 
 public class Canvas extends JPanel implements Serializable {
-	
+	final boolean DEBUG_MODE = false;
 	int shapeCounter = 1;
 	JPanel controlPanel;
 	JPanel whiteBoard1;
@@ -167,7 +167,6 @@ public class Canvas extends JPanel implements Serializable {
 	}
 	
 	private void setUpServer(){
-		//Container pane = new Container();
 		serverPanel = new JPanel();
 		serverPanel.setLayout(new BoxLayout(serverPanel, BoxLayout.X_AXIS));
 		JPanel serverBP = new JPanel();
@@ -219,7 +218,10 @@ public class Canvas extends JPanel implements Serializable {
 	public void removeRowFromTable( int index){
 			
 		((DefaultTableModel)table.getModel()).removeRow(index);
+<<<<<<< HEAD
 		System.out.println("row is : " +index);
+=======
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
 		
 	}
 	
@@ -272,8 +274,6 @@ public class Canvas extends JPanel implements Serializable {
 	public void addShapeButtons(){
 
 		JPanel container = new JPanel();
-		//commment the line below to get rid of gray background.
-		//container.setBackground(Color.LIGHT_GRAY);
 		container.setLayout(new FlowLayout());
 
 		text.setBackground(Color.lightGray);
@@ -348,13 +348,16 @@ public class Canvas extends JPanel implements Serializable {
 	        
 	    }
     class CanvasMouseHandler extends MouseAdapter {
-
-
         public void mousePressed(MouseEvent e){
         	clickedX = e.getX();
+<<<<<<< HEAD
             clickedY = e.getY();
            
+=======
+        	clickedY = e.getY();
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
             DShape clicked = shapeContains(e.getPoint());
+<<<<<<< HEAD
             if (clicked == null) {
             	if (selectedShape != null)
             		selectedShape.model.setIsSelected(false);
@@ -363,8 +366,23 @@ public class Canvas extends JPanel implements Serializable {
             } else {
             	selectRowFrmTable( clicked.model.getX() , clickedY);
  
+=======
+            
+            if(selectedShape != null){
+            	selectRowFrmTable( selectedShape.model.getX() , clickedY);
+                knobClicked = knobContains(selectedShape, e.getPoint());
+                currentW = selectedShape.model.getWidth();             
+                if(knobClicked != null)
+                	isKnobClicked = true;   
+            }
+             
+            if(clicked != null){
+            	selectRowFrmTable( clicked.model.getX() , clickedY);
+                
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
             	if(selectedShape != null){
             		selectRowFrmTable( selectedShape.model.getX() , clickedY);
+<<<<<<< HEAD
             		knobClicked = knobContains(selectedShape, e.getPoint());
             		currentW = selectedShape.model.getWidth();             
             		if(knobClicked != null)
@@ -381,6 +399,20 @@ public class Canvas extends JPanel implements Serializable {
             		repaint();
             	}      
             }
+=======
+            		selectedShape.model.setIsSelected(false);
+            		selectedShape = null;
+            	}
+                setSelectedShape(clicked);
+                repaint();
+            } else {
+            	if(selectedShape != null){
+            		selectedShape.model.setIsSelected(false);
+                    selectedShape = null;
+                    repaint();
+	            }
+            }            
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
         }
 
 		 private void updateTableForXY(int x, int y , int h ,int w ) {
@@ -396,15 +428,16 @@ public class Canvas extends JPanel implements Serializable {
         	for (int i = table.getRowCount() - 1; i >= 0; --i) {
                 for (int j = table.getColumnCount() - 1; j >= 0; --j) {
                     if (table.getValueAt(i, j).equals(clickedX)      ) {
-                       System.out.println("row found");
                        selectedRow = i ;
 
                        return i;
-                        
                     }
                 }
             }
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
 			return -1;
 		}
         
@@ -416,15 +449,15 @@ public class Canvas extends JPanel implements Serializable {
                 }
                 selectedShape = clicked;
                 selectedShape.model.setIsSelected(true);
+<<<<<<< HEAD
                 
+=======
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
             }
-            
         }   
 
         public void mouseDragged(MouseEvent e) {
-
             if(selectedShape != null){
-                
                 int currentWidth = selectedShape.model.getWidth();
                 int currentHeight = selectedShape.model.getHeight();
                 int currentX = selectedShape.model.getX();
@@ -434,18 +467,52 @@ public class Canvas extends JPanel implements Serializable {
                 
                 if(isKnobClicked){
                     if(knobClicked.equals(DShapeModel.knob[0])){
+<<<<<<< HEAD
                         knobClicked = new Rectangle(e.getX(), e.getY(), 9, 9);   
+=======
+                        knobClicked = new Rectangle(e.getX(), e.getY(), 9, 9);
+                        if(DEBUG_MODE){
+                        	System.out.println("Sending to resizingUpdate: x: " + 
+                                    e.getX() + ", y: " + e.getY() + ", width: " + (currentWidth - changeX) +
+                                    ", Height: " + (currentHeight - changeY));
+                        }
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
                         resizingUpdate(e.getX(), e.getY(), currentWidth - changeX, currentHeight - changeY);
                     }
                     else if(knobClicked.equals(DShapeModel.knob[1])){
                         knobClicked = new Rectangle(e.getX() - 9, e.getY(), 9, 9);
+<<<<<<< HEAD
+=======
+                        if(DEBUG_MODE){
+                        	System.out.println("Sending to resizingUpdate: x: " +
+                        			currentX + ", y: " + e.getY() + ", width: " + (changeX) +
+                                    ", Height: " + (currentHeight - changeY));
+                        }
+                                
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
                         resizingUpdate(currentX, e.getY(), changeX, currentHeight - changeY);                        
                     }
                     else if(knobClicked.equals(DShapeModel.knob[2])){
                         knobClicked = new Rectangle(e.getX(), e.getY() - 9, 9, 9);
+<<<<<<< HEAD
+=======
+                        if(DEBUG_MODE){
+                        	System.out.println("Sending to resizingUpdate: x: " +
+                        			e.getX() + ", y: " + currentY + ", width: " + (currentWidth - changeX) +
+                                    ", Height: " + (changeY));
+                        }      
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
                         resizingUpdate(e.getX(), currentY, currentWidth - changeX, changeY);
                     }else{
                         knobClicked = new Rectangle(e.getX() - 9, e.getY() - 9, 9, 9);
+<<<<<<< HEAD
+=======
+                        if(DEBUG_MODE){
+                        	System.out.println("Sending to resizingUpdate: x: " + 
+                        			 currentX + ", y: " + currentY + ", width: " + (changeX) +
+                                     ", Height: " + (changeY));                        
+                        }
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
                         resizingUpdate(currentX, currentY, changeX, changeY);
                     }
                 }  else {
@@ -471,14 +538,12 @@ public class Canvas extends JPanel implements Serializable {
             }
         }
    
-                
-  
         public void mouseReleased(MouseEvent e) {
             isKnobClicked = false;
         }
-    }
+    } // class CanvasMouseHandler
 	
-	}
+	} // class Whiteboard
 	
 	//Action Listeners 
 	ActionListener shapeListener = new ActionListener() {
@@ -576,6 +641,7 @@ public class Canvas extends JPanel implements Serializable {
 		        repaint();
 		        
 			}else if (text.equalsIgnoreCase("remove shape")){
+<<<<<<< HEAD
 				if(selectedShape != null){
 					shapes.remove(selectedShape);
 					selectedShape.model.unRegister(serverOps);
@@ -588,10 +654,28 @@ public class Canvas extends JPanel implements Serializable {
 					}
 				}
 				repaint();
+=======
+				removeShape();
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
 			}
 			
 		}
 	};
+	
+	public void removeShape(){
+		if(selectedShape != null){
+			shapes.remove(selectedShape);
+			selectedShape.model.unRegister(serverOps);
+			serverOps.remove(selectedShape.model);
+			shapeModelList.remove(selectedShape.model);
+			selectedShape.model.setIsSelected(false);
+			selectedShape = null;
+			if(selectedRow != -1){
+				removeRowFromTable(selectedRow); 
+			}
+		}
+		repaint();
+	}
 	
 	public void clearCanvas(){
 		shapes.clear();
@@ -657,14 +741,29 @@ public class Canvas extends JPanel implements Serializable {
     }
     
     public DShape shapeContains(Point p){
+<<<<<<< HEAD
+=======
+    	if(DEBUG_MODE){
+    		System.out.println("In shapeContains with point: " + p.toString());
+    	}
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
     	for(int i = shapes.size() - 1; i >= 0; i--){
             DShape r = shapes.get(i);
             if(r.model.getShapeRectangle().contains(p)) {
+<<<<<<< HEAD
+=======
+            	if(DEBUG_MODE){
+            		System.out.println("shape found at index " + i + ": " + 
+            	r.toString());
+            	}
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
                 getSelectedShapeCoords(i);
                 return r;
             }
         }
-    	System.out.println("No shape found at point");
+    	if(DEBUG_MODE){
+    		System.out.println("No shape found at point");
+    	}
         return null;
     }
     
@@ -673,12 +772,20 @@ public class Canvas extends JPanel implements Serializable {
         int shapeHeight = shapes.get(i).model.getHeight();
         int selectedTopLeftX = shapes.get(i).model.getX();
         int selectedTopLeftY = shapes.get(i).model.getY();
+<<<<<<< HEAD
+=======
+        if(DEBUG_MODE){
+        	System.out.println("In getSelectedShapeCoords, shapeWidth: " +
+        			shapeWidth + ", shapeHeight: " + shapeHeight + " X: " + selectedTopLeftX +
+        	        ", Y: " + selectedTopLeftY + "");
+        }
+        
+>>>>>>> branch 'master' of https://github.com/joshsylvia/CS151project.git
         setNewCoordinates(selectedTopLeftX, selectedTopLeftY, shapeWidth, shapeHeight);
     }
     
     public void setNewCoordinates(int x, int y, int width, int height) {
-    	System.out.println("In setNewCoordinates");
-        topLeft = x + "," + y;
+    	topLeft = x + "," + y;
         topRight = (x + width) + "," + y;
         bottomLeft = x + "," + (y + height);
         bottomRight = (x + width) + "," + (y + height);
@@ -703,5 +810,6 @@ public class Canvas extends JPanel implements Serializable {
 		whiteBoard1.removeMouseListener(wBML[0]);
 		MouseMotionListener[] wBMML = whiteBoard1.getMouseMotionListeners();
 		whiteBoard1.removeMouseMotionListener(wBMML[0]);
+		clearCanvas();
 	}
 }
