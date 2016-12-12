@@ -136,18 +136,22 @@ public class DShapeModel implements Serializable {
        notifyListeners();
    }
    
-   public static Rectangle[] getknob() {
+   public Rectangle[] getknob() {
 
        String[] topLeft = Canvas.topLeft.split(",");
        String[] topRight = Canvas.topRight.split(",");
        String[] bottomLeft = Canvas.bottomLeft.split(",");
        String[] bottomRight = Canvas.bottomRight.split(",");
 
-       knob[0] = new Rectangle(Integer.parseInt(topLeft[0]), Integer.parseInt(topLeft[1]), knobize, knobize);
-       knob[1] = new Rectangle(Integer.parseInt(topRight[0]) - knobize, Integer.parseInt(topRight[1]), knobize, knobize);
-       knob[2] = new Rectangle(Integer.parseInt(bottomLeft[0]), Integer.parseInt(bottomLeft[1])- knobize, knobize, knobize);
-       knob[3] = new Rectangle(Integer.parseInt(bottomRight[0]) - knobize, Integer.parseInt(bottomRight[1])- knobize, knobize, knobize);
+//       knob[0] = new Rectangle(Integer.parseInt(topLeft[0]), Integer.parseInt(topLeft[1]), knobize, knobize);
+//       knob[1] = new Rectangle(Integer.parseInt(topRight[0]) - knobize, Integer.parseInt(topRight[1]), knobize, knobize);
+//       knob[2] = new Rectangle(Integer.parseInt(bottomLeft[0]), Integer.parseInt(bottomLeft[1])- knobize, knobize, knobize);
+//       knob[3] = new Rectangle(Integer.parseInt(bottomRight[0]) - knobize, Integer.parseInt(bottomRight[1])- knobize, knobize, knobize);
 
+       knob[0] = new Rectangle((this.getX()),(getY()), knobize, knobize);
+       knob[1] = new Rectangle(((this.getX() + this.getWidth()) - knobize),(getY()), knobize, knobize);
+       knob[2] = new Rectangle((this.getX()),((getY() + this.getHeight()) - knobize), knobize, knobize);
+       knob[3] = new Rectangle(((this.getX() + this.getWidth() - knobize)),((getY() + this.getHeight() - knobize)), knobize, knobize);
        return knob;
    }
    
