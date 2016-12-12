@@ -166,7 +166,6 @@ public class Canvas extends JPanel implements Serializable {
 	}
 	
 	private void setUpServer(){
-		//Container pane = new Container();
 		serverPanel = new JPanel();
 		serverPanel.setLayout(new BoxLayout(serverPanel, BoxLayout.X_AXIS));
 		JPanel serverBP = new JPanel();
@@ -219,8 +218,6 @@ public class Canvas extends JPanel implements Serializable {
 		
 		
 		((DefaultTableModel)table.getModel()).removeRow(index);
-		//selectedRow = -1 ;
-		System.out.println("row is : " +index);
 		
 	}
 	
@@ -270,8 +267,6 @@ public class Canvas extends JPanel implements Serializable {
 	public void addShapeButtons(){
 
 		JPanel container = new JPanel();
-		//commment the line below to get rid of gray background.
-		//container.setBackground(Color.LIGHT_GRAY);
 		container.setLayout(new FlowLayout());
 
 		text.setBackground(Color.lightGray);
@@ -345,14 +340,10 @@ public class Canvas extends JPanel implements Serializable {
 	        
 	    }
     class CanvasMouseHandler extends MouseAdapter {
-
-
         public void mousePressed(MouseEvent e){
         	clickedX = e.getX();
-
-            clickedY = e.getY();
+        	clickedY = e.getY();
             DShape clicked = shapeContains(e.getPoint());
-            selectRowFrmTable( clicked.model.getX() , clickedY);
             
             if(selectedShape != null){
             	selectRowFrmTable( selectedShape.model.getX() , clickedY);
@@ -363,7 +354,8 @@ public class Canvas extends JPanel implements Serializable {
             }
              
             if(clicked != null){
-            	
+            	selectRowFrmTable( clicked.model.getX() , clickedY);
+                
             	if(selectedShape != null){
             		selectRowFrmTable( selectedShape.model.getX() , clickedY);
             		selectedShape.model.setIsSelected(false);
@@ -376,8 +368,7 @@ public class Canvas extends JPanel implements Serializable {
             		selectedShape.model.setIsSelected(false);
                     selectedShape = null;
                     repaint();
-            	}
-            	
+	            }
             }            
         }
 
@@ -394,19 +385,14 @@ public class Canvas extends JPanel implements Serializable {
         	for (int i = table.getRowCount() - 1; i >= 0; --i) {
                 for (int j = table.getColumnCount() - 1; j >= 0; --j) {
                     if (table.getValueAt(i, j).equals(clickedX)      ) {
-                       System.out.println("row found");
                        selectedRow = i ;
                       // removeRowFromTable(selectedRow);
 //                       table.setValueAt(clickedX, i, 0); //value, r, c
 //                       table.setValueAt(clickedY, i, 1); //value, r, c
                        return i;
-                        
                     }
                 }
             }
-        	
-        	
-        	
 			return -1;
 		}
         
@@ -418,21 +404,11 @@ public class Canvas extends JPanel implements Serializable {
                 }
                 selectedShape = clicked;
                 selectedShape.model.setIsSelected(true);
-                
-                // why is this here?
-//                if(selectedShape != null){
-//                	clicked.model.setIsSelected(true);
-//                	cColor = selectedShape.model.getColor();
-//                }
-
             }
-            
         }   
 
         public void mouseDragged(MouseEvent e) {
-
             if(selectedShape != null){
-                
                 int currentWidth = selectedShape.model.getWidth();
                 int currentHeight = selectedShape.model.getHeight();
                 int currentX = selectedShape.model.getX();
@@ -466,9 +442,7 @@ public class Canvas extends JPanel implements Serializable {
                         	System.out.println("Sending to resizingUpdate: x: " +
                         			e.getX() + ", y: " + currentY + ", width: " + (currentWidth - changeX) +
                                     ", Height: " + (changeY));
-                        }
-                                
-                                
+                        }      
                         resizingUpdate(e.getX(), currentY, currentWidth - changeX, changeY);
                     }else{
                         knobClicked = new Rectangle(e.getX() - 9, e.getY() - 9, 9, 9);
@@ -502,14 +476,12 @@ public class Canvas extends JPanel implements Serializable {
             }
         }
    
-                
-  
         public void mouseReleased(MouseEvent e) {
             isKnobClicked = false;
         }
-    }
+    } // class CanvasMouseHandler
 	
-	}
+	} // class Whiteboard
 	
 	//Action Listeners 
 	ActionListener shapeListener = new ActionListener() {
@@ -617,9 +589,7 @@ public class Canvas extends JPanel implements Serializable {
 						removeRowFromTable(selectedRow); 
 					}
 				}
-				//removeRowFromTable(selectedRow); 
 				repaint();
-				// needs more work remove last one throws error.
 			}
 			
 		}
