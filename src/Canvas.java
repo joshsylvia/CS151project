@@ -578,22 +578,26 @@ public class Canvas extends JPanel implements Serializable {
 		        repaint();
 		        
 			}else if (text.equalsIgnoreCase("remove shape")){
-				if(selectedShape != null){
-					shapes.remove(selectedShape);
-					selectedShape.model.unRegister(serverOps);
-					serverOps.remove(selectedShape.model);
-					shapeModelList.remove(selectedShape.model);
-					selectedShape.model.setIsSelected(false);
-					selectedShape = null;
-					if(selectedRow != -1){
-						removeRowFromTable(selectedRow); 
-					}
-				}
-				repaint();
+				removeShape();
 			}
 			
 		}
 	};
+	
+	public void removeShape(){
+		if(selectedShape != null){
+			shapes.remove(selectedShape);
+			selectedShape.model.unRegister(serverOps);
+			serverOps.remove(selectedShape.model);
+			shapeModelList.remove(selectedShape.model);
+			selectedShape.model.setIsSelected(false);
+			selectedShape = null;
+			if(selectedRow != -1){
+				removeRowFromTable(selectedRow); 
+			}
+		}
+		repaint();
+	}
 	
 	public void clearCanvas(){
 		shapes.clear();

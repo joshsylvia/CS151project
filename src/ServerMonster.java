@@ -245,8 +245,10 @@ public class ServerMonster implements ModelListener{
             		}
             	} else if (command.equals("remove")){
             		int index = getModelIndex(model);
-            		shapeList.remove(index);
-            		ref.repaint();
+            		//shapeList.remove(index);
+            		//ref.repaint();
+            		ref.selectedShape = ref.shapes.get(index);
+            		ref.removeShape();
             		if(DEBUG_MODE){
             			System.out.println("In remove - ShapeList state: ");
             			printShapeList();
